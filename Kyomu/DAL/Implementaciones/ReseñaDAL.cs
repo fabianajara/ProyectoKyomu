@@ -18,9 +18,41 @@ namespace DAL.Implementations
 
         }
 
-        public List<Reseña> GetAllReseñas()
+        public List<Reseña> GetAllReseñas ()
         {
-            throw new NotImplementedException();
+            return _context.Reseñas
+                .Select(e => new Reseña
+                {
+                    IdReseña = e.IdReseña,
+                    IdUsuario = e.IdUsuario,
+                    IdPlatillo = e.IdPlatillo,
+                    Calificacion = e.Calificacion,
+                    Comentario = e.Comentario
+
+                })
+                .ToList();
+        }
+
+        public bool Add(Reseña entity)
+        {
+            try
+            {
+                _context.Reseñas.Add(new Reseña
+                {
+                    IdReseña = entity.IdReseña,
+                    IdUsuario = entity.IdUsuario,
+                    IdPlatillo = entity.IdPlatillo,
+                    Calificacion = entity.Calificacion,
+                    Comentario = entity.Comentario
+                });
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+
+                return false;
+            }
         }
     }
 }

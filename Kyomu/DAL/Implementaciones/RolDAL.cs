@@ -20,7 +20,35 @@ namespace DAL.Implementations
 
         public List<Rol> GetAllRoles()
         {
-            throw new NotImplementedException();
+            return _context.Rols
+                .Select(e => new Rol
+                {
+                    IdRol = e.IdRol,
+                    NombreRol = e.NombreRol,
+                    Descripcion = e.Descripcion
+
+                })
+                .ToList();
+        }
+
+        public bool Add(Rol entity)
+        {
+            try
+            {
+                _context.Rols.Add(new Rol
+                {
+                    IdRol = entity.IdRol,
+                    NombreRol = entity.NombreRol,
+                    Descripcion = entity.Descripcion
+                });
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+
+                return false;
+            }
         }
     }
 }
