@@ -20,7 +20,45 @@ namespace DAL.Implementations
 
         public List<Usuario> GetAllUsuarios()
         {
-            throw new NotImplementedException();
+            return _context.Usuarios
+                .Select(e => new Usuario
+                {
+                    IdUsuario = e.IdUsuario,
+                    IdRol = e.IdRol,
+                    Nombre = e.Nombre,
+                    Telefono = e.Telefono,
+                    CorreoElectronico = e.CorreoElectronico,
+                    Contraseña = e.Contraseña,
+                    Direccion = e.Direccion,
+                    Imagen = e.Imagen
+
+                })
+                .ToList();
+        }
+
+        public bool Add(Usuario entity)
+        {
+            try
+            {
+                _context.Usuarios.Add(new Usuario
+                {
+                    IdUsuario = entity.IdUsuario,
+                    IdRol = entity.IdRol,
+                    Nombre = entity.Nombre,
+                    Telefono = entity.Telefono,
+                    CorreoElectronico = entity.CorreoElectronico,
+                    Contraseña = entity.Contraseña,
+                    Direccion = entity.Direccion,
+                    Imagen = entity.Imagen
+                });
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+
+                return false;
+            }
         }
     }
 }

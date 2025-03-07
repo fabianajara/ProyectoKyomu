@@ -20,7 +20,41 @@ namespace DAL.Implementations
 
         public List<Platillo> GetAllPlatillos()
         {
-            throw new NotImplementedException();
+            return _context.Platillos
+                .Select(e => new Platillo
+                {
+                    IdPlatillo = e.IdPlatillo,
+                    Nombre = e.Nombre,
+                    Descripcion = e.Descripcion,
+                    Precio = e.Precio,
+                    Imagen = e.Imagen,
+                    IdCategoria = e.IdCategoria
+
+                })
+                .ToList();
+        }
+
+        public bool Add(Platillo entity)
+        {
+            try
+            {
+                _context.Platillos.Add(new Platillo
+                {
+                    IdPlatillo = entity.IdPlatillo,
+                    Nombre = entity.Nombre,
+                    Descripcion = entity.Descripcion,
+                    Precio = entity.Precio,
+                    Imagen = entity.Imagen,
+                    IdCategoria = entity.IdCategoria
+                });
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+
+                return false;
+            }
         }
     }
 }
