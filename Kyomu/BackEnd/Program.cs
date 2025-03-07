@@ -3,6 +3,7 @@ using BackEnd.Services.Interfaces;
 using DAL.Implementations;
 using DAL.Interfaces;
 using Entities.Entities;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 #region DI
-builder.Services.AddDbContext<KyomuContext>();
+builder.Services.AddDbContext<KyomuContext>(optionsAction => optionsAction.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IUnidadDeTrabajo, UnidadDeTrabajo>();
 
 builder.Services.AddScoped<IPagoDAL, PagoDAL>();
