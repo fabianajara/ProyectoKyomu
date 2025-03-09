@@ -5,44 +5,40 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FronEnd.Controllers
 {
-    public class MetodoPagoController : Controller
+    public class PagoController : Controller
     {
 
-        IMetodoPagoHelper _metodoPagoHelper;
+        IPagoHelper _pagoHelper;
 
-        public MetodoPagoController(IMetodoPagoHelper metodoPagoHelper)
+        public PagoController(IPagoHelper pagoHelper)
         {
-            _metodoPagoHelper = metodoPagoHelper;
+            _pagoHelper = pagoHelper;
         }
-
 
         public ActionResult Index()
         {
-            var result = _metodoPagoHelper.GetMetodosPago();
+            var result = _pagoHelper.GetPagos();
             return View(result);
         }
-
 
         public ActionResult Details(int id)
         {
-            var result = _metodoPagoHelper.GetMetodoPago(id);
+            var result = _pagoHelper.GetPago(id);
             return View(result);
         }
-
 
         public ActionResult Create()
         {
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(MetodoPagoViewModel metodoPagoHelper)
+        public ActionResult Create(PagoViewModel pagoHelper)
         {
             try
             {
-                _metodoPagoHelper.Add(metodoPagoHelper);
+                _pagoHelper.Add(pagoHelper);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -51,12 +47,10 @@ namespace FronEnd.Controllers
             }
         }
 
-
         public ActionResult Edit(int id)
         {
             return View();
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -76,7 +70,6 @@ namespace FronEnd.Controllers
         {
             return View();
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]

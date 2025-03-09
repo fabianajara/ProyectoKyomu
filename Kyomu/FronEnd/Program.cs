@@ -11,6 +11,8 @@ builder.Services.AddHttpClient<IServiceRepository, ServiceRepository>();
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 builder.Services.AddScoped<ICategoriaHelper, CategoriaHelper>();
 builder.Services.AddScoped<IDetallePedidoHelper, DetallePedidoHelper>();
+builder.Services.AddScoped<IMetodoPagoHelper, MetodoPagoHelper>();
+builder.Services.AddScoped<IPagoHelper, PagoHelper>();
 
 
 var app = builder.Build();
