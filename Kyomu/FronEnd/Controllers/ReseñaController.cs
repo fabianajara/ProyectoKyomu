@@ -6,44 +6,42 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FronEnd.Controllers
 {
-    public class CategoriaController : Controller
+    public class ReseñaController : Controller
     {
-
-        ICategoriaHelper _categoriaHelper;
-
-        public CategoriaController(ICategoriaHelper categoriaHelper)
+        IReseñaHelper _reseñaHelper;
+        public ReseñaController(IReseñaHelper reseñaHelper)
         {
-            _categoriaHelper = categoriaHelper;
+            _reseñaHelper = reseñaHelper;
         }
 
-        // GET: CategoryController
+        // GET: ReseñaController
         public ActionResult Index()
         {
-            var result = _categoriaHelper.GetCategorias();
+            var result = _reseñaHelper.GetReseñas();
             return View(result);
         }
 
-        // GET: CategoryController/Details/5
+        // GET: ReseñaController/Details/5
         public ActionResult Details(int id)
         {
-            var result = _categoriaHelper.GetCategoria(id);
+            var result = _reseñaHelper.GetReseña(id);
             return View(result);
         }
 
-        // GET: CategoryController/Create
+        // GET: ReseñaController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: CategoryController/Create
+        // POST: ReseñaController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CategoriaViewModel category)
+        public ActionResult Create(ReseñaViewModel reseña)
         {
             try
             {
-                _categoriaHelper.Add(category);
+                _reseñaHelper.Add(reseña);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -52,32 +50,32 @@ namespace FronEnd.Controllers
             }
         }
 
-        // GET: CategoryController/Edit/5
+        // GET: ReseñaController/Edit/5
         public ActionResult Edit(int id)
         {
-            var categoria = _categoriaHelper.GetCategoria(id);
-            if (categoria == null)
+            var reseña = _reseñaHelper.GetReseña(id);
+            if (reseña == null)
             {
                 return NotFound();
             }
-            return View(categoria);
+            return View(reseña);
         }
 
-        // POST: CategoryController/Edit/5
+        // POST: ReseñaController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, CategoriaViewModel categoria)
+        public ActionResult Edit(int id, ReseñaViewModel reseña)
         {
             try
             {
-                if (id != categoria.IdCategoria)
+                if (id != reseña.IdReseña)
                 {
                     return BadRequest();
                 }
 
 
-                var updatedCategoria = _categoriaHelper.Update(categoria);
-                if (updatedCategoria == null)
+                var updatedReseña = _reseñaHelper.Update(reseña);
+                if (updatedReseña == null)
                 {
                     return NotFound();
                 }
@@ -90,26 +88,26 @@ namespace FronEnd.Controllers
             }
         }
 
-        // GET: CategoriaController/Delete/5
+        // GET: ReseñaController/Delete/5
         public ActionResult Delete(int id)
         {
-            var categoria = _categoriaHelper.GetCategoria(id);
-            if (categoria == null)
+            var reseña = _reseñaHelper.GetReseña(id);
+            if (reseña == null)
             {
                 return NotFound();
             }
-            return View(categoria);
+            return View(reseña);
         }
 
-        // POST: CategoriaController/Delete/5
+        // POST: ReseñaController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, CategoriaViewModel categoria)
+        public ActionResult Delete(int id, ReseñaViewModel reseña)
         {
             try
             {
 
-                _categoriaHelper.Delete(id);
+                _reseñaHelper.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

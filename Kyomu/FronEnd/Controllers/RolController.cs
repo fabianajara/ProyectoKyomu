@@ -6,44 +6,42 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FronEnd.Controllers
 {
-    public class CategoriaController : Controller
+    public class RolController : Controller
     {
-
-        ICategoriaHelper _categoriaHelper;
-
-        public CategoriaController(ICategoriaHelper categoriaHelper)
+        IRolHelper _rolHelper;
+        public RolController(IRolHelper rolHelper)
         {
-            _categoriaHelper = categoriaHelper;
+            _rolHelper = rolHelper;
         }
 
-        // GET: CategoryController
+        // GET: RolController
         public ActionResult Index()
         {
-            var result = _categoriaHelper.GetCategorias();
+            var result = _rolHelper.GetRoles();
             return View(result);
         }
 
-        // GET: CategoryController/Details/5
+        // GET: RolController/Details/5
         public ActionResult Details(int id)
         {
-            var result = _categoriaHelper.GetCategoria(id);
+            var result = _rolHelper.GetRol(id);
             return View(result);
         }
 
-        // GET: CategoryController/Create
+        // GET: RolController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: CategoryController/Create
+        // POST: RolController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CategoriaViewModel category)
+        public ActionResult Create(RolViewModel rol)
         {
             try
             {
-                _categoriaHelper.Add(category);
+                _rolHelper.Add(rol);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -52,32 +50,32 @@ namespace FronEnd.Controllers
             }
         }
 
-        // GET: CategoryController/Edit/5
+        // GET: RolController/Edit/5
         public ActionResult Edit(int id)
         {
-            var categoria = _categoriaHelper.GetCategoria(id);
-            if (categoria == null)
+            var rol = _rolHelper.GetRol(id);
+            if (rol == null)
             {
                 return NotFound();
             }
-            return View(categoria);
+            return View(rol);
         }
 
-        // POST: CategoryController/Edit/5
+        // POST: RolController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, CategoriaViewModel categoria)
+        public ActionResult Edit(int id, RolViewModel rol)
         {
             try
             {
-                if (id != categoria.IdCategoria)
+                if (id != rol.IdRol)
                 {
                     return BadRequest();
                 }
 
 
-                var updatedCategoria = _categoriaHelper.Update(categoria);
-                if (updatedCategoria == null)
+                var updatedRol = _rolHelper.Update(rol);
+                if (updatedRol == null)
                 {
                     return NotFound();
                 }
@@ -90,26 +88,26 @@ namespace FronEnd.Controllers
             }
         }
 
-        // GET: CategoriaController/Delete/5
+        // GET: RolController/Delete/5
         public ActionResult Delete(int id)
         {
-            var categoria = _categoriaHelper.GetCategoria(id);
-            if (categoria == null)
+            var rol = _rolHelper.GetRol(id);
+            if (rol == null)
             {
                 return NotFound();
             }
-            return View(categoria);
+            return View(rol);
         }
 
-        // POST: CategoriaController/Delete/5
+        // POST: RolController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, CategoriaViewModel categoria)
+        public ActionResult Delete(int id, RolViewModel rol)
         {
             try
             {
 
-                _categoriaHelper.Delete(id);
+                _rolHelper.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

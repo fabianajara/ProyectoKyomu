@@ -13,6 +13,11 @@ builder.Services.AddScoped<ICategoriaHelper, CategoriaHelper>();
 builder.Services.AddScoped<IDetallePedidoHelper, DetallePedidoHelper>();
 builder.Services.AddScoped<IMetodoPagoHelper, MetodoPagoHelper>();
 builder.Services.AddScoped<IPagoHelper, PagoHelper>();
+builder.Services.AddScoped<IPedidoHelper, PedidoHelper>();
+builder.Services.AddScoped<IPlatilloHelper, PlatilloHelper>();
+builder.Services.AddScoped<IReseñaHelper, ReseñaHelper>();
+builder.Services.AddScoped<IRolHelper, RolHelper>();
+builder.Services.AddScoped<IUsuarioHelper, UsuarioHelper>();
 
 
 var app = builder.Build();

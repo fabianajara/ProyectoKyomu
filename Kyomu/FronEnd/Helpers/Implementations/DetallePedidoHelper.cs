@@ -41,7 +41,12 @@ namespace FronEnd.Helpers.Implementations
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage responseMessage = _ServiceRepository.DeleteResponse("api/DetallePedido" + id.ToString());
+            _ = _ServiceRepository.DeleteResponse("api/DetallePedido/" + id.ToString());
+            if (responseMessage != null)
+            {
+                var content = responseMessage.Content;
+            }
         }
 
         public List<DetallePedidoViewModel> GetDetallePedidos()
@@ -77,9 +82,22 @@ namespace FronEnd.Helpers.Implementations
             return resultado;
         }
 
-        public DetallePedidoViewModel Update(DetallePedidoViewModel categoria)
+        public DetallePedidoViewModel Update(DetallePedidoViewModel detallePedido)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage responseMessage = _ServiceRepository.PutResponse("api/DetallePedido/" + detallePedido.IdDetallePedido.ToString(), detallePedido);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var content = responseMessage.Content.ReadAsStringAsync().Result;
+                DetallePedidoAPI updatedDetallePedido = JsonConvert.DeserializeObject<DetallePedidoAPI>(content);
+                return Convertir(updatedDetallePedido);
+            }
+            else
+            {
+
+                var errorMessage = responseMessage.Content.ReadAsStringAsync().Result;
+                Console.WriteLine("Error al actualizar el detalle del pedido: " + errorMessage);
+                return null;
+            }
         }
     }
 }

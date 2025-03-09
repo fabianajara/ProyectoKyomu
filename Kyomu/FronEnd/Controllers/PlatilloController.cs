@@ -6,44 +6,44 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FronEnd.Controllers
 {
-    public class CategoriaController : Controller
+    public class PlatilloController : Controller
     {
+        IPlatilloHelper _platilloHelper;
 
-        ICategoriaHelper _categoriaHelper;
-
-        public CategoriaController(ICategoriaHelper categoriaHelper)
+        public PlatilloController(IPlatilloHelper platilloHelper)
         {
-            _categoriaHelper = categoriaHelper;
+            _platilloHelper = platilloHelper;
         }
 
-        // GET: CategoryController
+
+        // GET: PlatilloController
         public ActionResult Index()
         {
-            var result = _categoriaHelper.GetCategorias();
+            var result = _platilloHelper.GetPlatillos();
             return View(result);
         }
 
-        // GET: CategoryController/Details/5
+        // GET: PlatilloController/Details/5
         public ActionResult Details(int id)
         {
-            var result = _categoriaHelper.GetCategoria(id);
+            var result = _platilloHelper.GetPlatillo(id);
             return View(result);
         }
 
-        // GET: CategoryController/Create
+        // GET: PlatilloController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: CategoryController/Create
+        // POST: PlatilloController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CategoriaViewModel category)
+        public ActionResult Create(PlatilloViewModel platillo)
         {
             try
             {
-                _categoriaHelper.Add(category);
+                _platilloHelper.Add(platillo);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -52,32 +52,32 @@ namespace FronEnd.Controllers
             }
         }
 
-        // GET: CategoryController/Edit/5
+        // GET: PlatilloController/Edit/5
         public ActionResult Edit(int id)
         {
-            var categoria = _categoriaHelper.GetCategoria(id);
-            if (categoria == null)
+            var platillo = _platilloHelper.GetPlatillo(id);
+            if (platillo == null)
             {
-                return NotFound();
+                return NotFound(); 
             }
-            return View(categoria);
+            return View(platillo);
         }
 
-        // POST: CategoryController/Edit/5
+        // POST: PlatilloController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, CategoriaViewModel categoria)
+        public ActionResult Edit(int id, PlatilloViewModel platillo)
         {
             try
             {
-                if (id != categoria.IdCategoria)
+                if (id != platillo.IdPlatillo)
                 {
                     return BadRequest();
                 }
 
 
-                var updatedCategoria = _categoriaHelper.Update(categoria);
-                if (updatedCategoria == null)
+                var updatedPlatillo = _platilloHelper.Update(platillo);
+                if (updatedPlatillo == null)
                 {
                     return NotFound();
                 }
@@ -90,26 +90,26 @@ namespace FronEnd.Controllers
             }
         }
 
-        // GET: CategoriaController/Delete/5
+        // GET: PlatilloController/Delete/5
         public ActionResult Delete(int id)
         {
-            var categoria = _categoriaHelper.GetCategoria(id);
-            if (categoria == null)
+            var platillo = _platilloHelper.GetPlatillo(id);
+            if (platillo == null)
             {
                 return NotFound();
             }
-            return View(categoria);
+            return View(platillo);
         }
 
-        // POST: CategoriaController/Delete/5
+        // POST: PlatilloController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, CategoriaViewModel categoria)
+        public ActionResult Delete(int id, PlatilloViewModel platillo)
         {
             try
             {
 
-                _categoriaHelper.Delete(id);
+                _platilloHelper.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

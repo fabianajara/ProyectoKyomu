@@ -6,44 +6,42 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FronEnd.Controllers
 {
-    public class CategoriaController : Controller
+    public class UsuarioController : Controller
     {
-
-        ICategoriaHelper _categoriaHelper;
-
-        public CategoriaController(ICategoriaHelper categoriaHelper)
+        IUsuarioHelper _usuarioHelper;
+        public UsuarioController(IUsuarioHelper usuarioHelper)
         {
-            _categoriaHelper = categoriaHelper;
+            _usuarioHelper = usuarioHelper;
         }
 
-        // GET: CategoryController
+        // GET: UsuarioController
         public ActionResult Index()
         {
-            var result = _categoriaHelper.GetCategorias();
+            var result = _usuarioHelper.GetUsuarios();
             return View(result);
         }
 
-        // GET: CategoryController/Details/5
+        // GET: UsuarioController/Details/5
         public ActionResult Details(int id)
         {
-            var result = _categoriaHelper.GetCategoria(id);
+            var result = _usuarioHelper.GetUsuario(id);
             return View(result);
         }
 
-        // GET: CategoryController/Create
+        // GET: UsuarioController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: CategoryController/Create
+        // POST: UsuarioController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CategoriaViewModel category)
+        public ActionResult Create(UsuarioViewModel usuario)
         {
             try
             {
-                _categoriaHelper.Add(category);
+                _usuarioHelper.Add(usuario);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -52,32 +50,32 @@ namespace FronEnd.Controllers
             }
         }
 
-        // GET: CategoryController/Edit/5
+        // GET: UsuarioController/Edit/5
         public ActionResult Edit(int id)
         {
-            var categoria = _categoriaHelper.GetCategoria(id);
-            if (categoria == null)
+            var usuario = _usuarioHelper.GetUsuario(id);
+            if (usuario == null)
             {
                 return NotFound();
             }
-            return View(categoria);
+            return View(usuario);
         }
 
-        // POST: CategoryController/Edit/5
+        // POST: UsuarioController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, CategoriaViewModel categoria)
+        public ActionResult Edit(int id, UsuarioViewModel usuario)
         {
             try
             {
-                if (id != categoria.IdCategoria)
+                if (id != usuario.IdUsuario)
                 {
                     return BadRequest();
                 }
 
 
-                var updatedCategoria = _categoriaHelper.Update(categoria);
-                if (updatedCategoria == null)
+                var updatedUsuario = _usuarioHelper.Update(usuario);
+                if (updatedUsuario == null)
                 {
                     return NotFound();
                 }
@@ -90,26 +88,26 @@ namespace FronEnd.Controllers
             }
         }
 
-        // GET: CategoriaController/Delete/5
+        // GET: UsuarioController/Delete/5
         public ActionResult Delete(int id)
         {
-            var categoria = _categoriaHelper.GetCategoria(id);
-            if (categoria == null)
+            var usuario = _usuarioHelper.GetUsuario(id);
+            if (usuario == null)
             {
                 return NotFound();
             }
-            return View(categoria);
+            return View(usuario);
         }
 
-        // POST: CategoriaController/Delete/5
+        // POST: UsuarioController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, CategoriaViewModel categoria)
+        public ActionResult Delete(int id, UsuarioViewModel usuario)
         {
             try
             {
 
-                _categoriaHelper.Delete(id);
+                _usuarioHelper.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

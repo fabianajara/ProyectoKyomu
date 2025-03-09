@@ -41,7 +41,12 @@ namespace FronEnd.Helpers.Implementations
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage responseMessage = _ServiceRepository.DeleteResponse("api/Categoria" + id.ToString());
+            _ = _ServiceRepository.DeleteResponse("api/Categoria/" + id.ToString());
+            if (responseMessage != null)
+            {
+                var content = responseMessage.Content;
+            }
         }
 
         public List<CategoriaViewModel> GetCategorias()
@@ -79,7 +84,20 @@ namespace FronEnd.Helpers.Implementations
 
         public CategoriaViewModel Update(CategoriaViewModel categoria)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage responseMessage = _ServiceRepository.PutResponse("api/Categoria/" + categoria.IdCategoria.ToString(), categoria);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var content = responseMessage.Content.ReadAsStringAsync().Result;
+                CategoriaAPI updatedCategoria = JsonConvert.DeserializeObject<CategoriaAPI>(content);
+                return Convertir(updatedCategoria);
+            }
+            else
+            {
+
+                var errorMessage = responseMessage.Content.ReadAsStringAsync().Result;
+                Console.WriteLine("Error al actualizar la categoria: " + errorMessage);
+                return null;
+            }
         }
     }
 }
