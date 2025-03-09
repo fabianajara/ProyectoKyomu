@@ -1,7 +1,17 @@
+using FronEnd.Helpers.Implementations;
+using FronEnd.Helpers.Interfaces;  
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+
+builder.Services.AddHttpClient<IServiceRepository, ServiceRepository>();
+builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+builder.Services.AddScoped<ICategoriaHelper, CategoriaHelper>();
+builder.Services.AddScoped<IDetallePedidoHelper, DetallePedidoHelper>();
+
 
 var app = builder.Build();
 
