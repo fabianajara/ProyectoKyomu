@@ -42,7 +42,12 @@ namespace FronEnd.Helpers.Implementations
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage responseMessage = _ServiceRepository.DeleteResponse("api/Pago" + id.ToString());
+            _ = _ServiceRepository.DeleteResponse("api/Pago/" + id.ToString());
+            if (responseMessage != null)
+            {
+                var content = responseMessage.Content;
+            }
         }
 
         public List<PagoViewModel> GetPagos()
@@ -80,7 +85,20 @@ namespace FronEnd.Helpers.Implementations
 
         public PagoViewModel Update(PagoViewModel pago)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage responseMessage = _ServiceRepository.PutResponse("api/Pago/" + pago.IdPago.ToString(), pago);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var content = responseMessage.Content.ReadAsStringAsync().Result;
+                PagoAPI updatedPago = JsonConvert.DeserializeObject<PagoAPI>(content);
+                return Convertir(updatedPago);
+            }
+            else
+            {
+
+                var errorMessage = responseMessage.Content.ReadAsStringAsync().Result;
+                Console.WriteLine("Error al actualizar el pago: " + errorMessage);
+                return null;
+            }
         }
     }
 }

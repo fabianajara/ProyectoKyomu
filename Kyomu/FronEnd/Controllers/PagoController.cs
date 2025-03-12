@@ -1,4 +1,5 @@
-﻿using FronEnd.Helpers.Interfaces;
+﻿using FronEnd.Helpers.Implementations;
+using FronEnd.Helpers.Interfaces;
 using FronEnd.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,30 +16,34 @@ namespace FronEnd.Controllers
             _pagoHelper = pagoHelper;
         }
 
+        // GET: CategoryController
         public ActionResult Index()
         {
             var result = _pagoHelper.GetPagos();
             return View(result);
         }
 
+        // GET: CategoryController/Details/5
         public ActionResult Details(int id)
         {
             var result = _pagoHelper.GetPago(id);
             return View(result);
         }
 
+        // GET: CategoryController/Create
         public ActionResult Create()
         {
             return View();
         }
 
+        // POST: CategoryController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(PagoViewModel pagoHelper)
+        public ActionResult Create(PagoViewModel pago)
         {
             try
             {
-                _pagoHelper.Add(pagoHelper);
+                _pagoHelper.Add(pago);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -47,17 +52,36 @@ namespace FronEnd.Controllers
             }
         }
 
+        // GET: CategoryController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var pago = _pagoHelper.GetPago(id);
+            if (pago == null)
+            {
+                return NotFound();
+            }
+            return View(pago);
         }
 
+        // POST: CategoryController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, PagoViewModel pago)
         {
             try
             {
+                if (id != pago.IdPago)
+                {
+                    return BadRequest();
+                }
+
+
+                var updatedPago = _pagoHelper.Update(pago);
+                if (updatedPago == null)
+                {
+                    return NotFound();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -66,17 +90,25 @@ namespace FronEnd.Controllers
             }
         }
 
+        // GET: CategoriaController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var pago = _pagoHelper.GetPago(id);
+            if (pago == null)
+            {
+                return NotFound();
+            }
+            return View(pago);
         }
 
+        // POST: CategoriaController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {
+                _pagoHelper.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

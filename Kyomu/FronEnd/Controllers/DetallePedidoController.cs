@@ -1,4 +1,5 @@
-﻿using FronEnd.Helpers.Interfaces;
+﻿using FronEnd.Helpers.Implementations;
+using FronEnd.Helpers.Interfaces;
 using FronEnd.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -38,11 +39,11 @@ namespace FronEnd.Controllers
         // POST: DetallePedido/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(DetallePedidoViewModel detallePedidoHelper)
+        public ActionResult Create(DetallePedidoViewModel detallePedido)
         {
             try
             {
-                _detallePedidoHelper.Add(detallePedidoHelper);
+                _detallePedidoHelper.Add(detallePedido);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -54,16 +55,33 @@ namespace FronEnd.Controllers
         // GET: DetallePedido/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var detallePedido = _detallePedidoHelper.GetDetallePedido(id);
+            if (detallePedido == null)
+            {
+                return NotFound();
+            }
+            return View(detallePedido);
         }
 
         // POST: DetallePedido/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, DetallePedidoViewModel detallePedido)
         {
             try
             {
+                if (id != detallePedido.IdDetallePedido)
+                {
+                    return BadRequest();
+                }
+
+
+                var updatedDetallePedido = _detallePedidoHelper.Update(detallePedido);
+                if (updatedDetallePedido == null)
+                {
+                    return NotFound();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -75,7 +93,12 @@ namespace FronEnd.Controllers
         // GET: DetallePedidoController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var detallePedido = _detallePedidoHelper.GetDetallePedido(id);
+            if (detallePedido == null)
+            {
+                return NotFound();
+            }
+            return View(detallePedido);
         }
 
         // POST: DetallePedidoController/Delete/5
@@ -85,6 +108,7 @@ namespace FronEnd.Controllers
         {
             try
             {
+                _detallePedidoHelper.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -39,7 +39,12 @@ namespace FronEnd.Helpers.Implementations
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage responseMessage = _ServiceRepository.DeleteResponse("api/MetodoPago" + id.ToString());
+            _ = _ServiceRepository.DeleteResponse("api/MetodoPago/" + id.ToString());
+            if (responseMessage != null)
+            {
+                var content = responseMessage.Content;
+            }
         }
 
         public List<MetodoPagoViewModel> GetMetodosPago()
@@ -77,7 +82,20 @@ namespace FronEnd.Helpers.Implementations
 
         public MetodoPagoViewModel Update(MetodoPagoViewModel metodoPago)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage responseMessage = _ServiceRepository.PutResponse("api/MetodoPago/" + metodoPago.IdMetodo.ToString(), metodoPago);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var content = responseMessage.Content.ReadAsStringAsync().Result;
+                MetodoPagoAPI updatedmetodoPago = JsonConvert.DeserializeObject<MetodoPagoAPI>(content);
+                return Convertir(updatedmetodoPago);
+            }
+            else
+            {
+
+                var errorMessage = responseMessage.Content.ReadAsStringAsync().Result;
+                Console.WriteLine("Error al actualizar el método de pago: " + errorMessage);
+                return null;
+            }
         }
     }
 }
