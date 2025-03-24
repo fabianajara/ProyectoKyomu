@@ -10,11 +10,11 @@ namespace FronEnd.Helpers.Implementations
         {
             Client = _client;
             string baseUrl = configuration.GetValue<string>("BackEnd:Url") ?? "";
-            //string apiKey = configuration.GetValue<string>("BackEnd:ApiKey") ?? "";
+            string apiKey = configuration.GetValue<string>("BackEnd:ApiKey") ?? "";
 
             Client.BaseAddress = new Uri(baseUrl);
 
-            //Client.DefaultRequestHeaders.Add("ApiKey", apiKey);
+            Client.DefaultRequestHeaders.Add("ApiKey", apiKey);
 
 
         }
