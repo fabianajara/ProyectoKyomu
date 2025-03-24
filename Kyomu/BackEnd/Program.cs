@@ -1,3 +1,4 @@
+using BackEnd.Services.Implementaciones;
 using BackEnd.Services.Implementations;
 using BackEnd.Services.Interfaces;
 using DAL.Implementations;
@@ -55,6 +56,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
