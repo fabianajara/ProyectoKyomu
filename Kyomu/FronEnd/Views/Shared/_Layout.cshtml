@@ -24,6 +24,34 @@
     <link href="~/assets/vendor/aos/aos.css" rel="stylesheet">
     <link href="~/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
     <link href="~/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .star-rating {
+            direction: rtl; /* para que la estrella más alta aparezca primero */
+            display: inline-block;
+            font-size: 2em;
+        }
+
+            .star-rating input[type="radio"] {
+                display: none;
+            }
+
+            .star-rating label {
+                color: #ccc;
+                cursor: pointer;
+            }
+            /* Cuando se selecciona, cambia el color a naranja */
+            .star-rating input[type="radio"]:checked ~ label {
+                color: orange;
+            }
+            /* Al pasar el mouse, resalta la estrella y las anteriores */
+            .star-rating label:hover,
+            .star-rating label:hover ~ label {
+                color: orange;
+            }
+    </style>
+
 </head>
 <body>
 

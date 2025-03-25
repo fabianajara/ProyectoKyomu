@@ -1,50 +1,41 @@
 ﻿@model FronEnd.Models.ReseñaViewModel
+@inject FronEnd.Helpers.Interfaces.IUsuarioHelper _usuarioHelper
+@inject FronEnd.Helpers.Interfaces.IPlatilloHelper _platilloHelper
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Eliminar Reseña";
+    var usuario = _usuarioHelper.GetUsuario(Model.IdUsuario);
+    var platillo = _platilloHelper.GetPlatillo(Model.IdPlatillo);
 }
 
-<h1>Delete</h1>
+<h2>@ViewData["Title"]</h2>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>ReseñaViewModel</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdReseña)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdReseña)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdUsuario)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdUsuario)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdPlatillo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdPlatillo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Calificacion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Calificacion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Comentario)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Comentario)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+<h3 class="text-danger">¿Está seguro de que desea eliminar esta reseña?</h3>
+
+<div class="card">
+    <div class="card-header">
+        <h4>Reseña #@Model.IdReseña</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Usuario:</dt>
+            <dd class="col-sm-9">@usuario?.Nombre</dd>
+
+            <dt class="col-sm-3">Platillo:</dt>
+            <dd class="col-sm-9">@platillo?.Nombre</dd>
+
+            <dt class="col-sm-3">Calificación:</dt>
+            <dd class="col-sm-9">@Model.Calificacion</dd>
+
+            <dt class="col-sm-3">Comentario:</dt>
+            <dd class="col-sm-9">@Model.Comentario</dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="IdReseña" />
+            <button type="submit" class="btn btn-danger">Confirmar Eliminación</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
 </div>

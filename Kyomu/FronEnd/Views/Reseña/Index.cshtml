@@ -1,59 +1,47 @@
 ﻿@model IEnumerable<FronEnd.Models.ReseñaViewModel>
+@inject FronEnd.Helpers.Interfaces.IUsuarioHelper _usuarioHelper
+@inject FronEnd.Helpers.Interfaces.IPlatilloHelper _platilloHelper
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Listado de Reseñas";
 }
 
-<h1>Index</h1>
+<h2>@ViewData["Title"]</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Nueva Reseña</a>
 </p>
-<table class="table">
-    <thead>
+
+<table class="table table-striped table-hover">
+    <thead class="thead-dark">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdReseña)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdUsuario)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdPlatillo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Calificacion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Comentario)
-            </th>
-            <th></th>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Platillo</th>
+            <th>Calificación</th>
+            <th>Comentario</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdReseña)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdUsuario)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdPlatillo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Calificacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comentario)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.IdReseña}) |
-                    @Html.ActionLink("Details", "Details", new { id = item.IdReseña }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.IdReseña })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            var usuario = _usuarioHelper.GetUsuario(item.IdUsuario);
+            var platillo = _platilloHelper.GetPlatillo(item.IdPlatillo);
+            <tr>
+                <td>@item.IdReseña</td>
+                <td>@(usuario?.Nombre ?? "Desconocido")</td>
+                <td>@(platillo?.Nombre ?? "Desconocido")</td>
+                <td>@item.Calificacion</td>
+                <td>@item.Comentario</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a asp-action="Edit" asp-route-id="@item.IdReseña" class="btn btn-sm btn-warning">Editar</a>
+                        <a asp-action="Details" asp-route-id="@item.IdReseña" class="btn btn-sm btn-info">Detalles</a>
+                        <a asp-action="Delete" asp-route-id="@item.IdReseña" class="btn btn-sm btn-danger">Eliminar</a>
+                    </div>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

@@ -4,6 +4,9 @@ using FronEnd.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace FronEnd.Controllers
 {
@@ -50,10 +53,16 @@ namespace FronEnd.Controllers
         // POST: PlatilloController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(PlatilloViewModel platillo)
+        public ActionResult Create(PlatilloViewModel platillo, IFormFile imagenFile)
         {
             try
             {
+                // Si se envió un archivo, se guarda y se asigna la ruta al modelo
+                if (imagenFile != null && imagenFile.Length > 0)
+                {
+                    platillo.Imagen = SaveImage(imagenFile);
+                }
+
                 if (ModelState.IsValid)
                 {
                     _platilloHelper.Add(platillo);
@@ -102,13 +111,19 @@ namespace FronEnd.Controllers
         // POST: PlatilloController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, PlatilloViewModel platillo)
+        public ActionResult Edit(int id, PlatilloViewModel platillo, IFormFile imagenFile)
         {
             try
             {
                 if (id != platillo.IdPlatillo)
                 {
                     return BadRequest();
+                }
+
+                // Si se envió una nueva imagen, se guarda y se actualiza la propiedad
+                if (imagenFile != null && imagenFile.Length > 0)
+                {
+                    platillo.Imagen = SaveImage(imagenFile);
                 }
 
                 if (ModelState.IsValid)
@@ -185,6 +200,33 @@ namespace FronEnd.Controllers
 
                 return View(platillo);
             }
+        }
+        /// <summary>
+        /// Guarda la imagen en la carpeta wwwroot/images/platillos y retorna la ruta relativa.
+        /// </summary>
+        /// <param name="imagenFile">Archivo de imagen subido.</param>
+        /// <returns>Ruta relativa de la imagen.</returns>
+        private string SaveImage(IFormFile imagenFile)
+        {
+            // Generar un nombre único para evitar colisiones
+            var fileName = Path.GetFileName(imagenFile.FileName);
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + fileName;
+
+            // Ruta de la carpeta destino (wwwroot/images/platillos)
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "platillos");
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            var filePath = Path.Combine(folderPath, uniqueFileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                imagenFile.CopyTo(stream);
+            }
+
+            // Retorna la ruta relativa para ser usada en la vista y en el modelo
+            return "/images/platillos/" + uniqueFileName;
         }
     }
 }
