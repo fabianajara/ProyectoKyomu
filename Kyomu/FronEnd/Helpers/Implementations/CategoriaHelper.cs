@@ -85,10 +85,24 @@ namespace FronEnd.Helpers.Implementations
         public CategoriaViewModel Update(CategoriaViewModel categoria)
         {
             HttpResponseMessage responseMessage = _ServiceRepository.PutResponse("api/Categoria/" + categoria.IdCategoria.ToString(), categoria);
+
+            ////////////////////////////////////////////////// Esto es para debugging! //////////////////////////////////////////////////
+            var rawContent = responseMessage.Content.ReadAsStringAsync().Result;
+            Console.WriteLine("API Response: " + rawContent);
+            //////////////////////////////////////////////////  //////////////////////////////////////////////////
+
             if (responseMessage.IsSuccessStatusCode)
             {
                 var content = responseMessage.Content.ReadAsStringAsync().Result;
                 CategoriaAPI updatedCategoria = JsonConvert.DeserializeObject<CategoriaAPI>(content);
+
+                ////////////////////////////////////////////////// Esto es para debugging! //////////////////////////////////////////////////
+                if (updatedCategoria == null)
+                {
+                    Console.WriteLine("¡La API respondió éxito pero con contenido nulo o inválido!");
+                }
+                //////////////////////////////////////////////////  //////////////////////////////////////////////////
+                
                 return Convertir(updatedCategoria);
             }
             else

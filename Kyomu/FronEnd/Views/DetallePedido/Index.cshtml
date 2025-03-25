@@ -1,53 +1,53 @@
 ﻿@model IEnumerable<FronEnd.Models.DetallePedidoViewModel>
+@inject FronEnd.Helpers.Interfaces.IPedidoHelper _pedidoHelper
+@inject FronEnd.Helpers.Interfaces.IPlatilloHelper _platilloHelper
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Listado de Detalles de Pedido";
 }
 
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Crear Nuevo</a>
 </p>
-<table class="table">
-    <thead>
+<table class="table table-striped table-hover">
+    <thead class="thead-dark">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdDetallePedido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdPedido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdPlatillo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cantidad)
-            </th>
-            <th></th>
+            <th>ID Detalle</th>
+            <th>Pedido</th>
+            <th>Platillo</th>
+            <th>Cantidad</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdDetallePedido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdPedido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdPlatillo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cantidad)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.IdDetallePedido }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.IdDetallePedido }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.IdDetallePedido })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            var pedido = _pedidoHelper.GetPedido(item.IdPedido);
+            var platillo = _platilloHelper.GetPlatillo(item.IdPlatillo);
+
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.IdDetallePedido)</td>
+                <td>
+                    #@item.IdPedido -
+                    @(pedido?.FechaPedido.ToString("dd/MM/yyyy") ?? "N/A")
+                    <small class="text-muted">(@(pedido?.Estado ?? "N/A"))</small>
+                </td>
+                <td>
+                    #@item.IdPlatillo -
+                    @(platillo?.Nombre ?? "N/A")
+                    <small class="text-muted">($@(platillo?.Precio.ToString() ?? "N/A"))</small>
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.Cantidad)</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        @Html.ActionLink("Editar", "Edit", new { id = item.IdDetallePedido }, new { @class = "btn btn-sm btn-warning" })
+                        @Html.ActionLink("Detalles", "Details", new { id = item.IdDetallePedido }, new { @class = "btn btn-sm btn-info" })
+                        @Html.ActionLink("Eliminar", "Delete", new { id = item.IdDetallePedido }, new { @class = "btn btn-sm btn-danger" })
+                    </div>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
