@@ -1,5 +1,7 @@
 ﻿using BackEnd.DTO;
+using BackEnd.Services.Implementations;
 using BackEnd.Services.Interfaces;
+using Entities.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -49,28 +51,19 @@ namespace BackEnd.Controllers
         }
 
         // PUT api/<PedidoController>/5
-        [HttpPut]
-        public ActionResult Put([FromBody] PedidoDTO pedido)
+        [HttpPut("{id}")]
+        public ActionResult<PedidoDTO> Put([FromBody] PedidoDTO pedido)
         {
-            if (pedido == null)
-            {
-                return BadRequest();
-            }
             _pedidoService.Update(pedido);
-            return NoContent();
+            //Devolver el objeto actualizado que solicita el front//
+            return Ok(pedido);
         }
 
         // DELETE api/<PedidoController>/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public void Delete(int id)
         {
-            var existingPedido = _pedidoService.GetPedidoById(id);
-            if (existingPedido == null)
-            {
-                return NotFound();
-            }
             _pedidoService.Delete(id);
-            return NoContent();
         }
     }
 }

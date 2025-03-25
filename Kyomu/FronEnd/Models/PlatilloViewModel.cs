@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace FronEnd.Models
 {
@@ -15,5 +16,7 @@ namespace FronEnd.Models
         public string? Imagen { get; set; }
 
         public int? IdCategoria { get; set; }
+
+        public IEnumerable<SelectListItem>? CategoriasDisponibles { get; set; }
     }
 }

@@ -1,54 +1,46 @@
 ﻿@model FronEnd.Models.PlatilloViewModel
+@inject FronEnd.Helpers.Interfaces.ICategoriaHelper _categoriaHelper
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles del Platillo";
+    var categoria = Model.IdCategoria.HasValue ?
+        _categoriaHelper.GetCategoria(Model.IdCategoria.Value) : null;
 }
 
-<h1>Details</h1>
+<h2>@ViewData["Title"]</h2>
 
-<div>
-    <h4>PlatilloViewModel</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdPlatillo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdPlatillo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Descripcion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Precio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Precio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Imagen)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Imagen)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdCategoria)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdCategoria)
-        </dd>
-    </dl>
-</div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.IdPlatillo  }) |
-    <a asp-action="Index">Back to List</a>
+<div class="card">
+    <div class="card-header">
+        <h4>@Model.Nombre</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                @if (!string.IsNullOrEmpty(Model.Imagen))
+                {
+                    <img src="@Model.Imagen" alt="Imagen del platillo" class="img-fluid" />
+                }
+                else
+                {
+                    <div class="text-muted">No hay imagen disponible</div>
+                }
+            </div>
+            <div class="col-md-8">
+                <dl class="row">
+                    <dt class="col-sm-3">Descripción:</dt>
+                    <dd class="col-sm-9">@Model.Descripcion</dd>
+
+                    <dt class="col-sm-3">Precio:</dt>
+                    <dd class="col-sm-9">@Model.Precio.ToString("C")</dd>
+
+                    <dt class="col-sm-3">Categoría:</dt>
+                    <dd class="col-sm-9">@(categoria?.NombreCategoria ?? "Sin categoría")</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model.IdPlatillo" class="btn btn-warning">Editar</a>
+        <a asp-action="Index" class="btn btn-secondary">Volver al Listado</a>
+    </div>
 </div>

@@ -1,4 +1,6 @@
-﻿namespace FronEnd.Models
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace FronEnd.Models
 {
     public class PagoViewModel
     {
@@ -11,5 +13,8 @@
         public decimal Monto { get; set; }
 
         public DateTime FechaPago { get; set; }
+
+        public IEnumerable<SelectListItem>? PedidosDisponibles { get; set; }
+        public IEnumerable<SelectListItem>? MetodosPagoDisponibles { get; set; }
     }
 }

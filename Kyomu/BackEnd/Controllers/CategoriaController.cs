@@ -39,9 +39,11 @@ namespace BackEnd.Controllers
 
         // PUT api/<CategoriaController>/5
         [HttpPut("{id}")]
-        public void Put([FromBody] CategoriaDTO categoria)
+        public ActionResult<CategoriaDTO> Put([FromBody] CategoriaDTO categoria)
         {
             _categoriaService.Update(categoria);
+            //Devolver el objeto actualizado que solicita el front//
+            return Ok(categoria);
         }
 
         // DELETE api/<CategoriaController>/5

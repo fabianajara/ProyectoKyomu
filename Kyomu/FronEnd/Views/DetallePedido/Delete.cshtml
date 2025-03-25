@@ -1,0 +1,46 @@
+﻿@model FronEnd.Models.DetallePedidoViewModel
+
+@{
+    ViewData["Title"] = "Eliminar Detalle de Pedido";
+}
+
+<h3>¿Está seguro que desea eliminar este detalle?</h3>
+<div>
+    <h4>Detalle de Pedido</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdDetallePedido)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdDetallePedido)
+        </dd>
+
+        <dt class="col-sm-2">
+            Pedido
+        </dt>
+        <dd class="col-sm-10">
+            @ViewBag.PedidoInfo
+        </dd>
+
+        <dt class="col-sm-2">
+            Platillo
+        </dt>
+        <dd class="col-sm-10">
+            @ViewBag.PlatilloInfo
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cantidad)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cantidad)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="IdDetallePedido" />
+        <input type="submit" value="Eliminar" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

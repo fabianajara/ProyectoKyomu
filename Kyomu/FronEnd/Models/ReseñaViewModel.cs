@@ -1,4 +1,6 @@
-﻿namespace FronEnd.Models
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace FronEnd.Models
 {
     public class ReseñaViewModel
     {
@@ -11,5 +13,8 @@
         public int Calificacion { get; set; }
 
         public string? Comentario { get; set; }
+
+        public IEnumerable<SelectListItem>? UsuariosDisponibles { get; set; }
+        public IEnumerable<SelectListItem>? PlatillosDisponibles { get; set; }
     }
 }

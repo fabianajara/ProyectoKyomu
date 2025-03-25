@@ -1,0 +1,56 @@
+﻿@model FronEnd.Models.PagoViewModel
+
+@{
+    ViewData["Title"] = "Eliminar Pago";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>¿Está seguro que desea eliminar este pago?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            ID Pago:
+        </dt>
+        <dd class="col-sm-9">
+            @Model.IdPago
+        </dd>
+
+        <dt class="col-sm-3">
+            Pedido Relacionado:
+        </dt>
+        <dd class="col-sm-9">
+            @ViewBag.PedidoInfo
+        </dd>
+
+        <dt class="col-sm-3">
+            Método de Pago:
+        </dt>
+        <dd class="col-sm-9">
+            @ViewBag.MetodoPagoInfo
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Monto):
+        </dt>
+        <dd class="col-sm-9">
+            @Model.Monto.ToString("C")
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.FechaPago):
+        </dt>
+        <dd class="col-sm-9">
+            @Model.FechaPago.ToString("dd/MM/yyyy HH:mm")
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="IdPago" />
+        <div class="form-group">
+            <input type="submit" value="Eliminar" class="btn btn-danger" />
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>

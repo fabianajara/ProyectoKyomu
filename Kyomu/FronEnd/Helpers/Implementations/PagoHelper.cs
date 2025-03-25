@@ -42,8 +42,7 @@ namespace FronEnd.Helpers.Implementations
 
         public void Delete(int id)
         {
-            HttpResponseMessage responseMessage = _ServiceRepository.DeleteResponse("api/Pago" + id.ToString());
-            _ = _ServiceRepository.DeleteResponse("api/Pago/" + id.ToString());
+            HttpResponseMessage responseMessage = _ServiceRepository.DeleteResponse("api/Pago/" + id.ToString());
             if (responseMessage != null)
             {
                 var content = responseMessage.Content;

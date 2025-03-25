@@ -1,4 +1,6 @@
-﻿namespace FronEnd.ApiModels
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace FronEnd.ApiModels
 {
     public class PagoAPI
     {

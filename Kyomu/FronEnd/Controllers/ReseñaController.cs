@@ -3,15 +3,20 @@ using FronEnd.Helpers.Interfaces;
 using FronEnd.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FronEnd.Controllers
 {
     public class ReseñaController : Controller
     {
         IReseñaHelper _reseñaHelper;
-        public ReseñaController(IReseñaHelper reseñaHelper)
+        IUsuarioHelper _usuarioHelper;
+        IPlatilloHelper _platilloHelper;
+        public ReseñaController(IReseñaHelper reseñaHelper, IUsuarioHelper usuarioHelper, IPlatilloHelper platilloHelper)
         {
             _reseñaHelper = reseñaHelper;
+            _usuarioHelper = usuarioHelper;
+            _platilloHelper = platilloHelper;
         }
 
         // GET: ReseñaController
@@ -24,14 +29,29 @@ namespace FronEnd.Controllers
         // GET: ReseñaController/Details/5
         public ActionResult Details(int id)
         {
-            var result = _reseñaHelper.GetReseña(id);
-            return View(result);
+            var reseña = _reseñaHelper.GetReseña(id);
+            if (reseña == null)
+                return NotFound();
+
+            reseña.UsuariosDisponibles = _usuarioHelper.GetUsuarios().Select(u =>
+                new SelectListItem { Value = u.IdUsuario.ToString(), Text = u.Nombre });
+            reseña.PlatillosDisponibles = _platilloHelper.GetPlatillos().Select(p =>
+                new SelectListItem { Value = p.IdPlatillo.ToString(), Text = p.Nombre });
+
+            return View(reseña);
         }
 
         // GET: ReseñaController/Create
         public ActionResult Create()
         {
-            return View();
+            var model = new ReseñaViewModel
+            {
+                UsuariosDisponibles = _usuarioHelper.GetUsuarios().Select(u =>
+                    new SelectListItem { Value = u.IdUsuario.ToString(), Text = u.Nombre }),
+                PlatillosDisponibles = _platilloHelper.GetPlatillos().Select(p =>
+                    new SelectListItem { Value = p.IdPlatillo.ToString(), Text = p.Nombre })
+            };
+            return View(model);
         }
 
         // POST: ReseñaController/Create
@@ -41,12 +61,26 @@ namespace FronEnd.Controllers
         {
             try
             {
-                _reseñaHelper.Add(reseña);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _reseñaHelper.Add(reseña);
+                    return RedirectToAction(nameof(Index));
+                }
+
+                reseña.UsuariosDisponibles = _usuarioHelper.GetUsuarios().Select(u =>
+                    new SelectListItem { Value = u.IdUsuario.ToString(), Text = u.Nombre });
+                reseña.PlatillosDisponibles = _platilloHelper.GetPlatillos().Select(p =>
+                    new SelectListItem { Value = p.IdPlatillo.ToString(), Text = p.Nombre });
+
+                return View(reseña);
             }
             catch
             {
-                return View();
+                reseña.UsuariosDisponibles = _usuarioHelper.GetUsuarios().Select(u =>
+                    new SelectListItem { Value = u.IdUsuario.ToString(), Text = u.Nombre });
+                reseña.PlatillosDisponibles = _platilloHelper.GetPlatillos().Select(p =>
+                    new SelectListItem { Value = p.IdPlatillo.ToString(), Text = p.Nombre });
+                return View(reseña);
             }
         }
 
@@ -58,6 +92,21 @@ namespace FronEnd.Controllers
             {
                 return NotFound();
             }
+
+            reseña.UsuariosDisponibles = _usuarioHelper.GetUsuarios().Select(u =>
+                new SelectListItem
+                {
+                    Value = u.IdUsuario.ToString(),
+                    Text = u.Nombre,
+                    Selected = u.IdUsuario == reseña.IdUsuario
+                });
+            reseña.PlatillosDisponibles = _platilloHelper.GetPlatillos().Select(p =>
+                new SelectListItem
+                {
+                    Value = p.IdPlatillo.ToString(),
+                    Text = p.Nombre,
+                    Selected = p.IdPlatillo == reseña.IdPlatillo
+                });
             return View(reseña);
         }
 
@@ -73,18 +122,39 @@ namespace FronEnd.Controllers
                     return BadRequest();
                 }
 
-
-                var updatedReseña = _reseñaHelper.Update(reseña);
-                if (updatedReseña == null)
+                if (ModelState.IsValid)
                 {
-                    return NotFound();
+                    var updatedReseña = _reseñaHelper.Update(reseña);
+                    if (updatedReseña == null)
+                    {
+                        return NotFound();
+                    }
+                    return RedirectToAction(nameof(Index));
                 }
 
-                return RedirectToAction(nameof(Index));
+                reseña.UsuariosDisponibles = _usuarioHelper.GetUsuarios().Select(u =>
+                    new SelectListItem
+                    {
+                        Value = u.IdUsuario.ToString(),
+                        Text = u.Nombre,
+                        Selected = u.IdUsuario == reseña.IdUsuario
+                    });
+                reseña.PlatillosDisponibles = _platilloHelper.GetPlatillos().Select(p =>
+                    new SelectListItem
+                    {
+                        Value = p.IdPlatillo.ToString(),
+                        Text = p.Nombre,
+                        Selected = p.IdPlatillo == reseña.IdPlatillo
+                    });
+                return View(reseña);
             }
             catch
             {
-                return View();
+                reseña.UsuariosDisponibles = _usuarioHelper.GetUsuarios().Select(u =>
+                    new SelectListItem { Value = u.IdUsuario.ToString(), Text = u.Nombre });
+                reseña.PlatillosDisponibles = _platilloHelper.GetPlatillos().Select(p =>
+                    new SelectListItem { Value = p.IdPlatillo.ToString(), Text = p.Nombre });
+                return View(reseña);
             }
         }
 
@@ -96,6 +166,20 @@ namespace FronEnd.Controllers
             {
                 return NotFound();
             }
+            reseña.UsuariosDisponibles = _usuarioHelper.GetUsuarios().Select(u =>
+                new SelectListItem
+                {
+                    Value = u.IdUsuario.ToString(),
+                    Text = u.Nombre,
+                    Selected = u.IdUsuario == reseña.IdUsuario
+                });
+            reseña.PlatillosDisponibles = _platilloHelper.GetPlatillos().Select(p =>
+                new SelectListItem
+                {
+                    Value = p.IdPlatillo.ToString(),
+                    Text = p.Nombre,
+                    Selected = p.IdPlatillo == reseña.IdPlatillo
+                });
             return View(reseña);
         }
 

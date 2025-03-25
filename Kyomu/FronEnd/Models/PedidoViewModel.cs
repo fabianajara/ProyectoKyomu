@@ -1,4 +1,6 @@
-﻿namespace FronEnd.Models
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace FronEnd.Models
 {
     public class PedidoViewModel
     {
@@ -9,6 +11,10 @@
         public string? TipoEntrega { get; set; }
         public decimal Total { get; set; }
         public string Estado { get; set; } = null!;
+
+        public IEnumerable<SelectListItem>? UsuariosDisponibles { get; set; }
+        public IEnumerable<SelectListItem>? OpcionesEntrega { get; set; }
+        public IEnumerable<SelectListItem>? EstadosDisponibles { get; set; }
     }
 }
 
