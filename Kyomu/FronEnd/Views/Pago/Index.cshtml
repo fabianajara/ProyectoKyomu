@@ -1,59 +1,46 @@
 ﻿@model IEnumerable<FronEnd.Models.PagoViewModel>
+@inject FronEnd.Helpers.Interfaces.IPedidoHelper _pedidoHelper
+@inject FronEnd.Helpers.Interfaces.IMetodoPagoHelper _metodoPagoHelper
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Listado de Pagos";
 }
 
-<h1>Index</h1>
+<h2>@ViewData["Title"]</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Nuevo Pago</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdPago)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdPedido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdMetodo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Monto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaPago)
-            </th>
-            <th></th>
+            <th>ID</th>
+            <th>Pedido</th>
+            <th>Método de Pago</th>
+            <th>Monto</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdPago)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdPedido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdMetodo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Monto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaPago)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.IdPago }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.IdPago }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.IdPago })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            var pedido = _pedidoHelper.GetPedido(item.IdPedido);
+            var metodo = _metodoPagoHelper.GetMetodoPago(item.IdMetodo);
+
+            <tr>
+                <td>@item.IdPago</td>
+                <td>#@item.IdPedido - @pedido?.FechaPedido.ToString("dd/MM/yyyy")</td>
+                <td>@metodo?.TipoMetodo</td>
+                <td>@item.Monto.ToString("C")</td>
+                <td>@item.FechaPago.ToString("dd/MM/yyyy")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdPago" class="btn btn-sm btn-warning">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.IdPago" class="btn btn-sm btn-info">Detalles</a>
+                    <a asp-action="Delete" asp-route-id="@item.IdPago" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

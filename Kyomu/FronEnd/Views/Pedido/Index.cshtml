@@ -1,71 +1,60 @@
 ﻿@model IEnumerable<FronEnd.Models.PedidoViewModel>
+@inject FronEnd.Helpers.Interfaces.IUsuarioHelper _usuarioHelper
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Listado de Pedidos";
 }
 
-<h1>Index</h1>
+<h2>@ViewData["Title"]</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Nuevo Pedido</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdPedido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdUsuario)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaPedido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaEntrega)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TipoEntrega)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Total)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th></th>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Fecha Pedido</th>
+            <th>Fecha Entrega</th>
+            <th>Tipo Entrega</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdPedido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdUsuario)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaPedido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaEntrega)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TipoEntrega)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Total)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.IdPedido }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.IdPedido }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.IdPedido })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            var usuario = _usuarioHelper.GetUsuario(item.IdUsuario);
+
+            <tr>
+                <td>@item.IdPedido</td>
+                <td>@usuario?.Nombre (@usuario?.CorreoElectronico)</td>
+                <td>@item.FechaPedido.ToString("dd/MM/yyyy")</td>
+                <td>@(item.FechaEntrega?.ToString("dd/MM/yyyy HH:mm") ?? "Pendiente")</td>
+                <td>@item.TipoEntrega</td>
+                <td>@item.Total.ToString("C")</td>
+                <td>@item.Estado</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdPedido" class="btn btn-sm btn-warning">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.IdPedido" class="btn btn-sm btn-info">Detalles</a>
+                    <a asp-action="Delete" asp-route-id="@item.IdPedido" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+@functions {
+    string GetEstadoBadgeClass(string estado)
+    {
+        return estado switch
+        {
+            "Completado" => "badge-success",
+            "En proceso" => "badge-primary",
+            "Cancelado" => "badge-danger",
+            _ => "badge-secondary",
+        };
+    }
+}

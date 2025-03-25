@@ -1,58 +1,73 @@
 ﻿@model FronEnd.Models.PedidoViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Pedido";
 }
 
-<h1>Edit</h1>
+<h2>@ViewData["Title"]</h2>
 
-<h4>PedidoViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="IdUsuario" class="control-label"></label>
-                <input asp-for="IdUsuario" class="form-control" />
-                <span asp-validation-for="IdUsuario" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaPedido" class="control-label"></label>
-                <input asp-for="FechaPedido" class="form-control" />
-                <span asp-validation-for="FechaPedido" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaEntrega" class="control-label"></label>
-                <input asp-for="FechaEntrega" class="form-control" />
-                <span asp-validation-for="FechaEntrega" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TipoEntrega" class="control-label"></label>
-                <input asp-for="TipoEntrega" class="form-control" />
-                <span asp-validation-for="TipoEntrega" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Total" class="control-label"></label>
-                <input asp-for="Total" class="form-control" />
-                <span asp-validation-for="Total" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" />
-                <span asp-validation-for="Estado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Edit">
+    <input type="hidden" asp-for="IdPedido" />
+
+    <div class="form-group">
+        <label asp-for="IdUsuario" class="control-label">Usuario</label>
+        <select asp-for="IdUsuario" asp-items="Model.UsuariosDisponibles" class="form-control">
+            <option value="">-- Seleccionar Usuario --</option>
+        </select>
+        <span asp-validation-for="IdUsuario" class="text-danger"></span>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="form-group">
+        <label asp-for="FechaPedido" class="control-label"></label>
+        <input asp-for="FechaPedido" class="form-control" />
+        <span asp-validation-for="FechaPedido" class="text-danger"></span>
+    </div>
 
+    <div class="form-group">
+        <label asp-for="FechaEntrega" class="control-label">Fecha de Entrega (Opcional)</label>
+        <input asp-for="FechaEntrega" type="datetime-local" class="form-control" />
+        <span asp-validation-for="FechaEntrega" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TipoEntrega" class="control-label">Tipo de Entrega</label>
+        <select asp-for="TipoEntrega" asp-items="Model.OpcionesEntrega" class="form-control">
+            <option value="">-- Seleccionar Tipo --</option>
+        </select>
+        <span asp-validation-for="TipoEntrega" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Estado" class="control-label"></label>
+        <select asp-for="Estado" asp-items="Model.EstadosDisponibles" class="form-control">
+            <option value="">-- Seleccionar Estado --</option>
+        </select>
+        <span asp-validation-for="Estado" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Total" class="control-label"></label>
+        <input asp-for="Total" class="form-control" />
+        <span asp-validation-for="Total" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Guardar" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Formatear fechas para el input datetime-local
+        document.addEventListener('DOMContentLoaded', function() {
+            function formatDateForInput(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                return date.toISOString().slice(0, 16);
+            }
+
+            document.getElementById('FechaPedido').value = formatDateForInput('@Model.FechaPedido');
+            document.getElementById('FechaEntrega').value = formatDateForInput('@(Model.FechaEntrega?.ToString("yyyy-MM-ddTHH:mm") ?? "")');
+        });
+    </script>
 }
