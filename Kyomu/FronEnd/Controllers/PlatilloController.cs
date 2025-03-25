@@ -3,16 +3,19 @@ using FronEnd.Helpers.Interfaces;
 using FronEnd.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FronEnd.Controllers
 {
     public class PlatilloController : Controller
     {
         IPlatilloHelper _platilloHelper;
+        ICategoriaHelper _categoriaHelper;
 
-        public PlatilloController(IPlatilloHelper platilloHelper)
+        public PlatilloController(IPlatilloHelper platilloHelper, ICategoriaHelper categoriaHelper)
         {
             _platilloHelper = platilloHelper;
+            _categoriaHelper = categoriaHelper;
         }
 
 
@@ -33,7 +36,15 @@ namespace FronEnd.Controllers
         // GET: PlatilloController/Create
         public ActionResult Create()
         {
-            return View();
+            var model = new PlatilloViewModel
+            {
+                CategoriasDisponibles = _categoriaHelper.GetCategorias().Select(c => new SelectListItem
+                {
+                    Value = c.IdCategoria.ToString(),
+                    Text = c.NombreCategoria
+                })
+            };
+            return View(model);
         }
 
         // POST: PlatilloController/Create
@@ -43,12 +54,29 @@ namespace FronEnd.Controllers
         {
             try
             {
-                _platilloHelper.Add(platillo);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _platilloHelper.Add(platillo);
+                    return RedirectToAction(nameof(Index));
+                }
+
+                // Recargar dropdown si hay error
+                platillo.CategoriasDisponibles = _categoriaHelper.GetCategorias().Select(c => new SelectListItem
+                {
+                    Value = c.IdCategoria.ToString(),
+                    Text = c.NombreCategoria
+                });
+
+                return View(platillo);
             }
             catch
             {
-                return View();
+                platillo.CategoriasDisponibles = _categoriaHelper.GetCategorias().Select(c => new SelectListItem
+                {
+                    Value = c.IdCategoria.ToString(),
+                    Text = c.NombreCategoria
+                });
+                return View(platillo);
             }
         }
 
@@ -58,8 +86,16 @@ namespace FronEnd.Controllers
             var platillo = _platilloHelper.GetPlatillo(id);
             if (platillo == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
+
+            platillo.CategoriasDisponibles = _categoriaHelper.GetCategorias().Select(c => new SelectListItem
+            {
+                Value = c.IdCategoria.ToString(),
+                Text = c.NombreCategoria,
+                Selected = c.IdCategoria == platillo.IdCategoria
+            });
+
             return View(platillo);
         }
 
@@ -75,18 +111,34 @@ namespace FronEnd.Controllers
                     return BadRequest();
                 }
 
-
-                var updatedPlatillo = _platilloHelper.Update(platillo);
-                if (updatedPlatillo == null)
+                if (ModelState.IsValid)
                 {
-                    return NotFound();
+                    var updatedPlatillo = _platilloHelper.Update(platillo);
+                    if (updatedPlatillo == null)
+                    {
+                        return NotFound();
+                    }
+                    return RedirectToAction(nameof(Index));
                 }
 
-                return RedirectToAction(nameof(Index));
+                // Recargar dropdown si hay error
+                platillo.CategoriasDisponibles = _categoriaHelper.GetCategorias().Select(c => new SelectListItem
+                {
+                    Value = c.IdCategoria.ToString(),
+                    Text = c.NombreCategoria,
+                    Selected = c.IdCategoria == platillo.IdCategoria
+                });
+
+                return View(platillo);
             }
             catch
             {
-                return View();
+                platillo.CategoriasDisponibles = _categoriaHelper.GetCategorias().Select(c => new SelectListItem
+                {
+                    Value = c.IdCategoria.ToString(),
+                    Text = c.NombreCategoria
+                });
+                return View(platillo);
             }
         }
 
@@ -98,23 +150,40 @@ namespace FronEnd.Controllers
             {
                 return NotFound();
             }
+
+            // Cargar información de categoría para mostrar
+            var categoria = platillo.IdCategoria.HasValue ?
+                _categoriaHelper.GetCategoria(platillo.IdCategoria.Value) : null;
+
+            ViewBag.CategoriaInfo = categoria != null ? categoria.NombreCategoria : "Sin categoría";
+
             return View(platillo);
         }
 
         // POST: PlatilloController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, PlatilloViewModel platillo)
+        public ActionResult DeleteConfirmed(int id)
         {
             try
             {
-
                 _platilloHelper.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                var platillo = _platilloHelper.GetPlatillo(id);
+                if (platillo == null)
+                {
+                    return NotFound();
+                }
+
+                var categoria = platillo.IdCategoria.HasValue ?
+                    _categoriaHelper.GetCategoria(platillo.IdCategoria.Value) : null;
+
+                ViewBag.CategoriaInfo = categoria != null ? categoria.NombreCategoria : "Sin categoría";
+
+                return View(platillo);
             }
         }
     }

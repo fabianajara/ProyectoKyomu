@@ -3,6 +3,7 @@ using FronEnd.Helpers.Interfaces;
 using FronEnd.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FronEnd.Controllers
 {
@@ -10,30 +11,48 @@ namespace FronEnd.Controllers
     {
 
         IPagoHelper _pagoHelper;
+        IPedidoHelper _pedidoHelper;
+        IMetodoPagoHelper _metodoPagoHelper;
 
-        public PagoController(IPagoHelper pagoHelper)
+        public PagoController(IPagoHelper pagoHelper, IPedidoHelper pedidoHelper, IMetodoPagoHelper metodoPagoHelper)
         {
             _pagoHelper = pagoHelper;
+            _pedidoHelper = pedidoHelper;
+            _metodoPagoHelper = metodoPagoHelper;
         }
 
-        // GET: CategoryController
+        // GET: PagoController
         public ActionResult Index()
         {
             var result = _pagoHelper.GetPagos();
             return View(result);
         }
 
-        // GET: CategoryController/Details/5
+        // GET: Pago/Details/5
         public ActionResult Details(int id)
         {
             var result = _pagoHelper.GetPago(id);
             return View(result);
         }
 
-        // GET: CategoryController/Create
+        // GET: Pago/Create
         public ActionResult Create()
         {
-            return View();
+            var model = new PagoViewModel
+            {
+                FechaPago = DateTime.Now,
+                PedidosDisponibles = _pedidoHelper.GetPedidos().Select(p => new SelectListItem
+                {
+                    Value = p.IdPedido.ToString(),
+                    Text = $"Pedido #{p.IdPedido} - {p.FechaPedido:dd/MM/yyyy}"
+                }),
+                MetodosPagoDisponibles = _metodoPagoHelper.GetMetodosPago().Select(m => new SelectListItem
+                {
+                    Value = m.IdMetodo.ToString(),
+                    Text = m.TipoMetodo
+                })
+            };
+            return View(model);
         }
 
         // POST: CategoryController/Create
@@ -43,12 +62,39 @@ namespace FronEnd.Controllers
         {
             try
             {
-                _pagoHelper.Add(pago);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _pagoHelper.Add(pago);
+                    return RedirectToAction(nameof(Index));
+                }
+
+                // Recargar dropdowns si hay error
+                pago.PedidosDisponibles = _pedidoHelper.GetPedidos().Select(p => new SelectListItem
+                {
+                    Value = p.IdPedido.ToString(),
+                    Text = $"Pedido #{p.IdPedido} - {p.FechaPedido:dd/MM/yyyy}"
+                });
+                pago.MetodosPagoDisponibles = _metodoPagoHelper.GetMetodosPago().Select(m => new SelectListItem
+                {
+                    Value = m.IdMetodo.ToString(),
+                    Text = m.TipoMetodo
+                });
+
+                return View(pago);
             }
             catch
             {
-                return View();
+                pago.PedidosDisponibles = _pedidoHelper.GetPedidos().Select(p => new SelectListItem
+                {
+                    Value = p.IdPedido.ToString(),
+                    Text = $"Pedido #{p.IdPedido} - {p.FechaPedido:dd/MM/yyyy}"
+                });
+                pago.MetodosPagoDisponibles = _metodoPagoHelper.GetMetodosPago().Select(m => new SelectListItem
+                {
+                    Value = m.IdMetodo.ToString(),
+                    Text = m.TipoMetodo
+                });
+                return View(pago);
             }
         }
 
@@ -60,6 +106,20 @@ namespace FronEnd.Controllers
             {
                 return NotFound();
             }
+
+            pago.PedidosDisponibles = _pedidoHelper.GetPedidos().Select(p => new SelectListItem
+            {
+                Value = p.IdPedido.ToString(),
+                Text = $"Pedido #{p.IdPedido} - {p.FechaPedido:dd/MM/yyyy}",
+                Selected = p.IdPedido == pago.IdPedido
+            });
+            pago.MetodosPagoDisponibles = _metodoPagoHelper.GetMetodosPago().Select(m => new SelectListItem
+            {
+                Value = m.IdMetodo.ToString(),
+                Text = m.TipoMetodo,
+                Selected = m.IdMetodo == pago.IdMetodo
+            });
+
             return View(pago);
         }
 
@@ -75,18 +135,47 @@ namespace FronEnd.Controllers
                     return BadRequest();
                 }
 
-
-                var updatedPago = _pagoHelper.Update(pago);
-                if (updatedPago == null)
+                if (ModelState.IsValid)
                 {
-                    return NotFound();
+                    var updatedPago = _pagoHelper.Update(pago);
+                    if (updatedPago == null)
+                    {
+                        return NotFound();
+                    }
+                    return RedirectToAction(nameof(Index));
                 }
 
-                return RedirectToAction(nameof(Index));
+                // Recargar dropdowns si hay error
+                pago.PedidosDisponibles = _pedidoHelper.GetPedidos().Select(p => new SelectListItem
+                {
+                    Value = p.IdPedido.ToString(),
+                    Text = $"Pedido #{p.IdPedido} - {p.FechaPedido:dd/MM/yyyy}"
+                });
+
+                pago.MetodosPagoDisponibles = _metodoPagoHelper.GetMetodosPago().Select(m => new SelectListItem
+                {
+                    Value = m.IdMetodo.ToString(),
+                    Text = m.TipoMetodo
+                });
+
+                return View(pago);
             }
             catch
             {
-                return View();
+                // Recargar dropdowns en caso de error
+                pago.PedidosDisponibles = _pedidoHelper.GetPedidos().Select(p => new SelectListItem
+                {
+                    Value = p.IdPedido.ToString(),
+                    Text = $"Pedido #{p.IdPedido} - {p.FechaPedido:dd/MM/yyyy}"
+                });
+
+                pago.MetodosPagoDisponibles = _metodoPagoHelper.GetMetodosPago().Select(m => new SelectListItem
+                {
+                    Value = m.IdMetodo.ToString(),
+                    Text = m.TipoMetodo
+                });
+
+                return View(pago);
             }
         }
 
@@ -98,13 +187,21 @@ namespace FronEnd.Controllers
             {
                 return NotFound();
             }
+
+            // Cargar información adicional para mostrar
+            var pedido = _pedidoHelper.GetPedido(pago.IdPedido);
+            var metodoPago = _metodoPagoHelper.GetMetodoPago(pago.IdMetodo);
+
+            ViewBag.PedidoInfo = $"Pedido #{pedido?.IdPedido} - {pedido?.FechaPedido:dd/MM/yyyy}";
+            ViewBag.MetodoPagoInfo = $"{metodoPago?.TipoMetodo} - (ID: {metodoPago?.IdMetodo})";
+
             return View(pago);
         }
 
-        // POST: CategoriaController/Delete/5
-        [HttpPost]
+        // POST: PagoController/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult DeleteConfirmed(int id)
         {
             try
             {
@@ -113,7 +210,20 @@ namespace FronEnd.Controllers
             }
             catch
             {
-                return View();
+                // Recargar datos si falla
+                var pago = _pagoHelper.GetPago(id);
+                if (pago == null)
+                {
+                    return NotFound();
+                }
+
+                var pedido = _pedidoHelper.GetPedido(pago.IdPedido);
+                var metodoPago = _metodoPagoHelper.GetMetodoPago(pago.IdMetodo);
+
+                ViewBag.PedidoInfo = $"Pedido #{pedido?.IdPedido} - {pedido?.FechaPedido:dd/MM/yyyy}";
+                ViewBag.MetodoPagoInfo = $"{metodoPago?.TipoMetodo} - (ID: {metodoPago?.IdMetodo})";
+
+                return View(pago);
             }
         }
     }
