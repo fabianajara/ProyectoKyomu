@@ -10,6 +10,9 @@ namespace FronEnd.Helpers.Interfaces
         DetallePedidoViewModel GetDetallePedido(int? id);
         DetallePedidoViewModel Add(DetallePedidoViewModel detallePedido);
         DetallePedidoViewModel Update(DetallePedidoViewModel detallePedido);
+
+        List<PedidoViewModel> GetPedidosDisponibles();
+        List<PlatilloViewModel> GetPlatillosDisponibles();
         void Delete(int id);
     }
 }

@@ -62,7 +62,7 @@ namespace FronEnd.Helpers.Implementations
             foreach (var detallePedido in detallePedidos)
             {
                 lista.Add(Convertir(detallePedido));
-            }   
+            }
             return lista;
         }
 
@@ -98,6 +98,30 @@ namespace FronEnd.Helpers.Implementations
                 Console.WriteLine("Error al actualizar el detalle del pedido: " + errorMessage);
                 return null;
             }
+        }
+
+        public List<PedidoViewModel> GetPedidosDisponibles()
+        {
+            // Implementación para obtener pedidos disponibles desde tu API
+            var response = _ServiceRepository.GetResponse("api/Pedido/Disponibles");
+            if (response.IsSuccessStatusCode)
+            {
+                var content = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<List<PedidoViewModel>>(content);
+            }
+            return new List<PedidoViewModel>();
+        }
+
+        public List<PlatilloViewModel> GetPlatillosDisponibles()
+        {
+            // Implementación para obtener platillos disponibles desde tu API
+            var response = _ServiceRepository.GetResponse("api/Platillo/Disponibles");
+            if (response.IsSuccessStatusCode)
+            {
+                var content = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<List<PlatilloViewModel>>(content);
+            }
+            return new List<PlatilloViewModel>();
         }
     }
 }
