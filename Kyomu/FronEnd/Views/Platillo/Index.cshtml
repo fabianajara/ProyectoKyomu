@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<FronEnd.Models.PlatilloViewModel>
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
 @inject FronEnd.Helpers.Interfaces.ICategoriaHelper _categoriaHelper
 
 @{
@@ -30,9 +31,13 @@
 
             <tr>
                 <td>
-                    @if (!string.IsNullOrEmpty(item.Imagen))
+                    @if (!string.IsNullOrEmpty(item.Imagen) && System.IO.File.Exists(System.IO.Path.Combine(env.WebRootPath, item.Imagen.TrimStart('/'))))
                     {
                         <img src="@item.Imagen" alt="Imagen del platillo" style="max-width: 80px; max-height: 80px;" />
+                    }
+                    else
+                    {
+                        <p class="text-muted">No hay imagen disponible</p>
                     }
                 </td>
                 <td>@item.Nombre</td>

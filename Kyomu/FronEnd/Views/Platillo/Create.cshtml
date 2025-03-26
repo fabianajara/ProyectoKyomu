@@ -36,9 +36,20 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="Imagen" class="control-label">Imagen</label>
-        <input type="file" name="imagenFile" class="form-control-file" />
-        <span asp-validation-for="Imagen" class="text-danger"></span>
+        <label class="control-label">Imagen</label>
+
+        <!-- Vista previa de la imagen -->
+        <div id="new-image-preview" class="mb-2" style="display: none;">
+            <img id="preview-image" src="#"
+                 alt="Vista previa de imagen"
+                 class="img-thumbnail"
+                 style="max-width: 200px; max-height: 200px;" />
+        </div>
+
+        <!-- Input de archivo -->
+        <input type="file" name="imagenFile" id="imagenInput"
+               class="form-control-file mt-3"
+               accept="image/*" />
     </div>
 
     <div class="form-group">
@@ -51,4 +62,26 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        document.getElementById('imagenInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const previewContainer = document.getElementById('new-image-preview');
+            const previewImage = document.getElementById('preview-image');
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.style.display = 'none';
+            }
+        });
+    </script>
+
 }
