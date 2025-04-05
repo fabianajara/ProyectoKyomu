@@ -1,0 +1,56 @@
+﻿@model IEnumerable<FronEnd.Models.UsuarioViewModel>
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
+@inject FronEnd.Helpers.Interfaces.IRolHelper _rolHelper
+
+@{
+    ViewData["Title"] = "Listado de Usuarios";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Nuevo Usuario</a>
+</p>
+
+<table class="table table-striped table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var rol = item.IdRol != 0 ? _rolHelper.GetRol(item.IdRol) : null;
+
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Imagen) && System.IO.File.Exists(System.IO.Path.Combine(env.WebRootPath, item.Imagen.TrimStart('/'))))
+                    {
+                        <img src="@item.Imagen" alt="Imagen del usuario" style="max-width: 80px; max-height: 80px;" />
+                    }
+                    else
+                    {
+                        <div class="text-muted">Sin imagen</div>
+                    }
+                </td>
+                <td>@item.Nombre</td>
+                <td>@item.CorreoElectronico</td>
+                <td>@item.Telefono</td>
+                <td>@(rol?.NombreRol ?? "Sin rol")</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a asp-action="Edit" asp-route-id="@item.IdUsuario" class="btn btn-sm btn-warning">Editar</a>
+                        <a asp-action="Details" asp-route-id="@item.IdUsuario" class="btn btn-sm btn-info">Detalles</a>
+                        <a asp-action="Delete" asp-route-id="@item.IdUsuario" class="btn btn-sm btn-danger">Eliminar</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

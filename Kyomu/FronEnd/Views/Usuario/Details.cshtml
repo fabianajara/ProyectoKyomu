@@ -1,0 +1,49 @@
+﻿@model FronEnd.Models.UsuarioViewModel
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
+@inject FronEnd.Helpers.Interfaces.IRolHelper _rolHelper
+
+@{
+    ViewData["Title"] = "Detalles del Usuario";
+    var rol = Model.IdRol != 0 ? _rolHelper.GetRol(Model.IdRol) : null;
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h4>@Model.Nombre</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                @if (!string.IsNullOrEmpty(Model.Imagen) && System.IO.File.Exists(System.IO.Path.Combine(env.WebRootPath, Model.Imagen.TrimStart('/'))))
+                {
+                    <img src="@Model.Imagen" alt="Imagen del usuario" class="img-fluid" />
+                }
+                else
+                {
+                    <div class="text-muted">No hay imagen disponible</div>
+                }
+            </div>
+            <div class="col-md-8">
+                <dl class="row">
+                    <dt class="col-sm-4">Correo Electrónico:</dt>
+                    <dd class="col-sm-8">@Model.CorreoElectronico</dd>
+
+                    <dt class="col-sm-4">Teléfono:</dt>
+                    <dd class="col-sm-8">@Model.Telefono</dd>
+
+                    <dt class="col-sm-4">Dirección:</dt>
+                    <dd class="col-sm-8">@Model.Direccion</dd>
+
+                    <dt class="col-sm-4">Rol:</dt>
+                    <dd class="col-sm-8">@(rol?.NombreRol ?? "Sin rol")</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model.IdUsuario" class="btn btn-warning">Editar</a>
+        <a asp-action="Index" class="btn btn-secondary">Volver al Listado</a>
+    </div>
+</div>

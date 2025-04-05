@@ -1,0 +1,29 @@
+﻿@model FronEnd.Models.RolViewModel
+
+@{
+    ViewData["Title"] = "Detalles del Rol";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h4>@Model.NombreRol</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">ID del Rol:</dt>
+            <dd class="col-sm-9">@Model.IdRol</dd>
+
+            <dt class="col-sm-3">Nombre:</dt>
+            <dd class="col-sm-9">@Model.NombreRol</dd>
+
+            <dt class="col-sm-3">Descripción:</dt>
+            <dd class="col-sm-9">@Model.Descripcion</dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model.IdRol" class="btn btn-warning">Editar</a>
+        <a asp-action="Index" class="btn btn-secondary">Volver al Listado</a>
+    </div>
+</div>
