@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackEnd.Controllers
-{
+{/*
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -77,9 +77,10 @@ namespace BackEnd.Controllers
             }
 
             return Ok();
-
+    
         }
 
     }
+    */
 }
 

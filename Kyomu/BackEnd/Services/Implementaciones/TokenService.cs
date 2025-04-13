@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BackEnd.Services.Implementaciones
-{
+{/*
     public class TokenService : ITokenService
     {
         IConfiguration _configuration;
@@ -51,4 +51,5 @@ namespace BackEnd.Services.Implementaciones
             };
         }
     }
+    */
 }

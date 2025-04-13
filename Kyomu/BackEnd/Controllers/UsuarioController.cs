@@ -10,7 +10,6 @@ namespace BackEnd.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class UsuarioController : ControllerBase
     {
         IUsuarioService _usuarioService;
