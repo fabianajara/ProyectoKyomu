@@ -4,6 +4,7 @@ using FronEnd.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace FronEnd.Controllers
 {
@@ -230,6 +231,44 @@ namespace FronEnd.Controllers
             }
 
             return "/images/usuarios/" + uniqueFileName;
+        }
+
+        // GET: UsuarioController/Login
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(UsuarioViewModel model)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(model.CorreoElectronico) || string.IsNullOrEmpty(model.Contraseña))
+                {
+                    ViewBag.Error = "Ingresa el correo y la contraseña.";
+                    return View(model);
+                }
+
+                var usuario = _usuarioHelper.Login(model.CorreoElectronico, model.Contraseña);
+
+                if (usuario != null)
+                {
+                    // Guardamos al usuario en sesión
+                    HttpContext.Session.SetString("Usuario", JsonConvert.SerializeObject(usuario));
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ViewBag.Error = "Correo o contraseña incorrectos.";
+                    return View(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Ocurrió un error al iniciar sesión.";
+                return View(model);
+            }
         }
     }
 }
