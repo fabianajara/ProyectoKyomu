@@ -1,32 +1,25 @@
 ﻿@model FronEnd.Models.MetodoPagoViewModel
 
 @{
-    ViewData["Title"] = "Eliminar Método de Pago";
+    ViewData["Title"] = "Eliminar Método";
 }
 
-<h1>Eliminar Método de Pago</h1>
+<h1 id="titulo">@ViewData["Title"]</h1>
 
 <h3>¿Está seguro que desea eliminar este método de pago?</h3>
 <div>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IdMetodo)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IdMetodo)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TipoMetodo)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TipoMetodo)
-        </dd>
+        <dt class="col-sm-2">ID Método:</dt>
+        <dd class="col-sm-10">@Model.IdMetodo</dd>
+
+        <dt class="col-sm-2">Tipo de Método:</dt>
+        <dd class="col-sm-10">@Model.TipoMetodo</dd>
     </dl>
 
     <form asp-action="Delete">
         <input type="hidden" asp-for="IdMetodo" />
-        <input type="submit" value="Eliminar" class="btn btn-danger" />
-        <a asp-action="Index" class="btn btn-secondary">Volver a la lista</a>
+        <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
     </form>
 </div>

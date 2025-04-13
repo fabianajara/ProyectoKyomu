@@ -10,5 +10,7 @@ namespace DAL.Interfaces
     public interface IUsuarioDAL : IDALGenerico<Usuario>
     {
         List<Usuario> GetAllUsuarios();
+        Usuario Get(int id);
+        IEnumerable<Usuario> GetAll();
     }
 }

@@ -4,63 +4,83 @@
     ViewData["Title"] = "Editar Reseña";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h1 id="titulo">@ViewData["Title"]</h1>
 
-<form asp-action="Edit">
-    <input type="hidden" asp-for="IdReseña" />
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<h4>Modificar Reseña</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="IdReseña" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div class="form-group">
-        <label asp-for="IdUsuario" class="control-label">Usuario</label>
-        <select asp-for="IdUsuario" asp-items="Model.UsuariosDisponibles" class="form-control">
-            <option value="">-- Seleccionar Usuario --</option>
-        </select>
-        <span asp-validation-for="IdUsuario" class="text-danger"></span>
+            <div class="form-group">
+                <label asp-for="IdUsuario" class="control-label">Usuario</label>
+                <select asp-for="IdUsuario" asp-items="Model.UsuariosDisponibles" class="form-control">
+                    <option value="">-- Seleccionar Usuario --</option>
+                </select>
+                <span asp-validation-for="IdUsuario" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <label asp-for="IdPlatillo" class="control-label">Platillo</label>
+                <select asp-for="IdPlatillo" asp-items="Model.PlatillosDisponibles" class="form-control">
+                    <option value="">-- Seleccionar Platillo --</option>
+                </select>
+                <span asp-validation-for="IdPlatillo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <label class="control-label">Calificación</label>
+                <div class="star-rating">
+                    @for (int i = 5; i >= 1; i--)
+                    {
+                        <input id="star@(i)" type="radio" name="Calificacion" value="@i" @(Model.Calificacion == i ? "checked" : "") />
+                        <label for="star@(i)" class="fa fa-star"></label>
+                    }
+                </div>
+                <span asp-validation-for="Calificacion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <label asp-for="Comentario" class="control-label"></label>
+                <textarea asp-for="Comentario" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Comentario" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Guardar" class="btn btn-outline-warning" />
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+        </form>
     </div>
-
-    <div class="form-group">
-        <label asp-for="IdPlatillo" class="control-label">Platillo</label>
-        <select asp-for="IdPlatillo" asp-items="Model.PlatillosDisponibles" class="form-control">
-            <option value="">-- Seleccionar Platillo --</option>
-        </select>
-        <span asp-validation-for="IdPlatillo" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label">Calificación</label>
-        <div class="star-rating">
-            <input id="star5" type="radio" name="Calificacion" value="5" @(Model.Calificacion == 5 ? "checked" : "") />
-            <label for="star5" class="fa fa-star"></label>
-
-            <input id="star4" type="radio" name="Calificacion" value="4" @(Model.Calificacion == 4 ? "checked" : "") />
-            <label for="star4" class="fa fa-star"></label>
-
-            <input id="star3" type="radio" name="Calificacion" value="3" @(Model.Calificacion == 3 ? "checked" : "") />
-            <label for="star3" class="fa fa-star"></label>
-
-            <input id="star2" type="radio" name="Calificacion" value="2" @(Model.Calificacion == 2 ? "checked" : "") />
-            <label for="star2" class="fa fa-star"></label>
-
-            <input id="star1" type="radio" name="Calificacion" value="1" @(Model.Calificacion == 1 ? "checked" : "") />
-            <label for="star1" class="fa fa-star"></label>
-        </div>
-        <span asp-validation-for="Calificacion" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Comentario" class="control-label">Comentario</label>
-        <textarea asp-for="Comentario" class="form-control"></textarea>
-        <span asp-validation-for="Comentario" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <input type="submit" value="Guardar" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-    </div>
-</form>
+</div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <style>
+        .star-rating {
+            direction: rtl;
+            unicode-bidi: bidi-override;
+        }
+
+            .star-rating input {
+                display: none;
+            }
+
+            .star-rating label {
+                color: #ccc;
+                font-size: 1.5em;
+                padding: 0 2px;
+                cursor: pointer;
+            }
+
+                .star-rating input:checked ~ label,
+                .star-rating label:hover,
+                .star-rating label:hover ~ label {
+                    color: orange;
+                }
+    </style>
 }
