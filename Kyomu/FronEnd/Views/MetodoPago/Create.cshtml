@@ -1,24 +1,27 @@
 ﻿@model FronEnd.Models.MetodoPagoViewModel
 
 @{
-    ViewData["Title"] = "Crear Método de Pago";
+    ViewData["Title"] = "Agregar Método";
 }
 
-<h1>Crear Nuevo Método de Pago</h1>
+<h1 id="titulo">@ViewData["Title"]</h1>
 
+<h4>Nuevo Método de Pago</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
-                <label asp-for="TipoMetodo" class="control-label"></label>
-                <input asp-for="TipoMetodo" class="form-control" />
+                <label asp-for="TipoMetodo" class="control-label">Tipo de Método</label>
+                <input asp-for="TipoMetodo" class="form-control" placeholder="Ej: Tarjeta de crédito" />
                 <span asp-validation-for="TipoMetodo" class="text-danger"></span>
             </div>
+
             <div class="form-group mt-3">
-                <input type="submit" value="Crear" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Volver a la lista</a>
+                <input type="submit" value="Agregar" class="btn btn-outline-primary me-3" />
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
             </div>
         </form>
     </div>

@@ -1,41 +1,47 @@
 ﻿@model FronEnd.Models.DetallePedidoViewModel
 
 @{
-    ViewData["Title"] = "Crear Detalle de Pedido";
+    ViewData["Title"] = "Agregar Detalle";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h1 id="titulo">@ViewData["Title"]</h1>
 
-<form asp-action="Create">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<h4>Nuevo Detalle de Pedido</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div class="form-group">
-        <label asp-for="IdPedido" class="control-label">Pedido</label>
-        <select asp-for="IdPedido" asp-items="Model.Pedidos" class="form-control">
-            <option value="">-- Seleccionar Pedido --</option>
-        </select>
-        <span asp-validation-for="IdPedido" class="text-danger"></span>
+            <div class="form-group">
+                <label asp-for="IdPedido" class="control-label">Pedido</label>
+                <select asp-for="IdPedido" asp-items="Model.Pedidos" class="form-control">
+                    <option value="">-- Seleccionar Pedido --</option>
+                </select>
+                <span asp-validation-for="IdPedido" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <label asp-for="IdPlatillo" class="control-label">Platillo</label>
+                <select asp-for="IdPlatillo" asp-items="Model.Platillos" class="form-control">
+                    <option value="">-- Seleccionar Platillo --</option>
+                </select>
+                <span asp-validation-for="IdPlatillo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <label asp-for="Cantidad" class="control-label"></label>
+                <input asp-for="Cantidad" class="form-control" min="1" />
+                <span asp-validation-for="Cantidad" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Agregar" class="btn btn-outline-primary me-3" />
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+        </form>
     </div>
-
-    <div class="form-group">
-        <label asp-for="IdPlatillo" class="control-label">Platillo</label>
-        <select asp-for="IdPlatillo" asp-items="Model.Platillos" class="form-control">
-            <option value="">-- Seleccionar Platillo --</option>
-        </select>
-        <span asp-validation-for="IdPlatillo" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Cantidad" class="control-label"></label>
-        <input asp-for="Cantidad" class="form-control" min="1" />
-        <span asp-validation-for="Cantidad" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <input type="submit" value="Crear" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-    </div>
-</form>
+</div>
 
 @section Scripts {
     @{

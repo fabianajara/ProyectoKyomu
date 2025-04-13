@@ -60,5 +60,10 @@ namespace DAL.Implementations
                 return false;
             }
         }
+        public IEnumerable<Usuario> Find(Func<Usuario, bool> predicate)
+        {
+            return _context.Usuarios.Where(predicate);
+        }
+
     }
 }

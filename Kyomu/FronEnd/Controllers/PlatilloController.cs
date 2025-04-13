@@ -57,7 +57,13 @@ namespace FronEnd.Controllers
         {
             try
             {
-                // Si se envió un archivo, se guarda y se asigna la ruta al modelo
+                
+                if (imagenFile == null)
+                {
+                    ModelState.Remove("imagenFile");
+                }
+
+                
                 if (imagenFile != null && imagenFile.Length > 0)
                 {
                     platillo.Imagen = SaveImage(imagenFile);
@@ -69,7 +75,7 @@ namespace FronEnd.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                // Recargar dropdown si hay error
+                
                 platillo.CategoriasDisponibles = _categoriaHelper.GetCategorias().Select(c => new SelectListItem
                 {
                     Value = c.IdCategoria.ToString(),
@@ -115,12 +121,16 @@ namespace FronEnd.Controllers
         {
             try
             {
+
                 if (id != platillo.IdPlatillo)
                 {
                     return BadRequest();
                 }
 
-                // Si se envió una nueva imagen, se guarda y se actualiza la propiedad
+                if (imagenFile == null)
+                {
+                    ModelState.Remove("imagenFile");
+                }
                 if (imagenFile != null && imagenFile.Length > 0)
                 {
                     platillo.Imagen = SaveImage(imagenFile);
@@ -136,7 +146,6 @@ namespace FronEnd.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                // Recargar dropdown si hay error
                 platillo.CategoriasDisponibles = _categoriaHelper.GetCategorias().Select(c => new SelectListItem
                 {
                     Value = c.IdCategoria.ToString(),
@@ -201,18 +210,13 @@ namespace FronEnd.Controllers
                 return View(platillo);
             }
         }
-        /// <summary>
-        /// Guarda la imagen en la carpeta wwwroot/images/platillos y retorna la ruta relativa.
-        /// </summary>
-        /// <param name="imagenFile">Archivo de imagen subido.</param>
-        /// <returns>Ruta relativa de la imagen.</returns>
+
         private string SaveImage(IFormFile imagenFile)
         {
-            // Generar un nombre único para evitar colisiones
+            
             var fileName = Path.GetFileName(imagenFile.FileName);
             var uniqueFileName = Guid.NewGuid().ToString() + "_" + fileName;
-
-            // Ruta de la carpeta destino (wwwroot/images/platillos)
+            
             var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "platillos");
             if (!Directory.Exists(folderPath))
             {
@@ -225,7 +229,6 @@ namespace FronEnd.Controllers
                 imagenFile.CopyTo(stream);
             }
 
-            // Retorna la ruta relativa para ser usada en la vista y en el modelo
             return "/images/platillos/" + uniqueFileName;
         }
     }

@@ -1,0 +1,55 @@
+﻿@model FronEnd.Models.UsuarioViewModel
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
+@inject FronEnd.Helpers.Interfaces.IRolHelper _rolHelper
+
+@{
+    ViewData["Title"] = "Detalles del Usuario";
+    var rol = Model.IdRol != 0 ? _rolHelper.GetRol(Model.IdRol) : null;
+}
+
+<h1 id="titulo">@ViewData["Title"]</h1>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                @if (!string.IsNullOrEmpty(Model.Imagen) && System.IO.File.Exists(System.IO.Path.Combine(env.WebRootPath, Model.Imagen.TrimStart('/'))))
+                {
+                    <img src="@Model.Imagen"
+                         alt="Imagen del usuario"
+                         class="img-fluid rounded-circle mb-3"
+                         style="width: 200px; height: 200px; object-fit: cover;">
+                }
+                else
+                {
+                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mb-3"
+                         style="width: 200px; height: 200px;">
+                        <i class="bi bi-person fs-1 text-muted"></i>
+                    </div>
+                }
+            </div>
+            <div class="col-md-8">
+                <dl class="row">
+                    <dt class="col-sm-4">Nombre:</dt>
+                    <dd class="col-sm-8">@Model.Nombre</dd>
+
+                    <dt class="col-sm-4">Correo:</dt>
+                    <dd class="col-sm-8">@Model.CorreoElectronico</dd>
+
+                    <dt class="col-sm-4">Teléfono:</dt>
+                    <dd class="col-sm-8">@Model.Telefono</dd>
+
+                    <dt class="col-sm-4">Dirección:</dt>
+                    <dd class="col-sm-8">@Model.Direccion</dd>
+
+                    <dt class="col-sm-4">Rol:</dt>
+                    <dd class="col-sm-8">@(rol?.NombreRol ?? "Sin rol asignado")</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        @Html.ActionLink("Editar", "Edit", new { id = Model.IdUsuario }, new { @class = "btn btn-outline-warning" })
+        <a asp-action="Index" class="btn btn-outline-secondary">Volver</a>
+    </div>
+</div>

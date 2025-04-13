@@ -3,15 +3,20 @@ using FronEnd.Helpers.Interfaces;
 using FronEnd.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace FronEnd.Controllers
 {
     public class UsuarioController : Controller
     {
         IUsuarioHelper _usuarioHelper;
-        public UsuarioController(IUsuarioHelper usuarioHelper)
+        IRolHelper _rolHelper;
+
+        public UsuarioController(IUsuarioHelper usuarioHelper, IRolHelper rolHelper)
         {
             _usuarioHelper = usuarioHelper;
+            _rolHelper = rolHelper;
         }
 
         // GET: UsuarioController
@@ -31,22 +36,60 @@ namespace FronEnd.Controllers
         // GET: UsuarioController/Create
         public ActionResult Create()
         {
-            return View();
+            var model = new UsuarioViewModel
+            {
+                RolesDisponibles = _rolHelper.GetRoles().Select(r => new SelectListItem
+                {
+                    Value = r.IdRol.ToString(),
+                    Text = r.NombreRol
+                })
+            };
+            return View(model);
         }
 
         // POST: UsuarioController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(UsuarioViewModel usuario)
+        public ActionResult Create(UsuarioViewModel usuario, IFormFile imagenFile)
         {
             try
             {
-                _usuarioHelper.Add(usuario);
-                return RedirectToAction(nameof(Index));
+                if (imagenFile == null)
+                {
+                    ModelState.Remove("imagenFile");
+                }
+
+                if (imagenFile != null && imagenFile.Length > 0)
+                {
+                    usuario.Imagen = SaveImage(imagenFile);
+                }
+
+                if (ModelState.IsValid) {
+                    _usuarioHelper.Add(usuario);
+                    return RedirectToAction(nameof(Index));
+                }
+
+                var model = new UsuarioViewModel
+                {
+                    RolesDisponibles = _rolHelper.GetRoles().Select(r => new SelectListItem
+                    {
+                        Value = r.IdRol.ToString(),
+                        Text = r.NombreRol
+                    })
+                };
+                return View(model);
             }
             catch
             {
-                return View();
+                var model = new UsuarioViewModel
+                {
+                    RolesDisponibles = _rolHelper.GetRoles().Select(r => new SelectListItem
+                    {
+                        Value = r.IdRol.ToString(),
+                        Text = r.NombreRol
+                    })
+                };
+                return View(model);
             }
         }
 
@@ -58,13 +101,20 @@ namespace FronEnd.Controllers
             {
                 return NotFound();
             }
+            usuario.RolesDisponibles = _rolHelper.GetRoles().Select(c => new SelectListItem
+            {
+                Value = c.IdRol.ToString(),
+                Text = c.NombreRol,
+                Selected = c.IdRol == usuario.IdRol
+            });
+
             return View(usuario);
         }
 
         // POST: UsuarioController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, UsuarioViewModel usuario)
+        public ActionResult Edit(int id, UsuarioViewModel usuario, IFormFile imagenFile)
         {
             try
             {
@@ -73,18 +123,47 @@ namespace FronEnd.Controllers
                     return BadRequest();
                 }
 
-
-                var updatedUsuario = _usuarioHelper.Update(usuario);
-                if (updatedUsuario == null)
+                if (imagenFile == null)
                 {
-                    return NotFound();
+                    ModelState.Remove("imagenFile");
                 }
 
-                return RedirectToAction(nameof(Index));
+                if (imagenFile != null && imagenFile.Length > 0)
+                {
+                    usuario.Imagen = SaveImage(imagenFile);
+                }
+
+                if (ModelState.IsValid)
+                {
+                    var updatedUsuario = _usuarioHelper.Update(usuario);
+                    if (updatedUsuario == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return RedirectToAction(nameof(Index));
+                }
+
+                usuario.RolesDisponibles = _rolHelper.GetRoles().Select(c => new SelectListItem
+                {
+                    Value = c.IdRol.ToString(),
+                    Text = c.NombreRol,
+                    Selected = c.IdRol == usuario.IdRol
+                });
+
+                return View(usuario);
+
             }
             catch
             {
-                return View();
+                usuario.RolesDisponibles = _rolHelper.GetRoles().Select(c => new SelectListItem
+                {
+                    Value = c.IdRol.ToString(),
+                    Text = c.NombreRol,
+                    Selected = c.IdRol == usuario.IdRol
+                });
+
+                return View(usuario);
             }
         }
 
@@ -96,11 +175,17 @@ namespace FronEnd.Controllers
             {
                 return NotFound();
             }
+
+            var rol = usuario.IdRol.HasValue ?
+                _rolHelper.GetRol(usuario.IdRol.Value) : null;
+
+            ViewBag.RolInfo = rol != null ? rol.NombreRol : "Sin rol";
+
             return View(usuario);
         }
 
         // POST: UsuarioController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, UsuarioViewModel usuario)
         {
@@ -112,7 +197,77 @@ namespace FronEnd.Controllers
             }
             catch
             {
-                return View();
+                var usuarioToDelete = _usuarioHelper.GetUsuario(id);
+                if (usuarioToDelete == null)
+                {
+                    return NotFound();
+                }
+
+                var categoria = usuarioToDelete.IdRol.HasValue ?
+                    _rolHelper.GetRol(usuarioToDelete.IdRol.Value) : null;
+
+                ViewBag.CategoriaInfo = categoria != null ? categoria.NombreRol : "Sin rol";
+
+                return View(usuarioToDelete);
+            }
+        }
+
+        private string SaveImage(IFormFile imagenFile)
+        {
+
+            var fileName = Path.GetFileName(imagenFile.FileName);
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + fileName;
+
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "usuarios");
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            var filePath = Path.Combine(folderPath, uniqueFileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                imagenFile.CopyTo(stream);
+            }
+
+            return "/images/usuarios/" + uniqueFileName;
+        }
+
+        // GET: UsuarioController/Login
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(UsuarioViewModel model)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(model.CorreoElectronico) || string.IsNullOrEmpty(model.Contraseña))
+                {
+                    ViewBag.Error = "Ingresa el correo y la contraseña.";
+                    return View(model);
+                }
+
+                var usuario = _usuarioHelper.Login(model.CorreoElectronico, model.Contraseña);
+
+                if (usuario != null)
+                {
+                    // Guardamos al usuario en sesión
+                    HttpContext.Session.SetString("Usuario", JsonConvert.SerializeObject(usuario));
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ViewBag.Error = "Correo o contraseña incorrectos.";
+                    return View(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Ocurrió un error al iniciar sesión.";
+                return View(model);
             }
         }
     }
