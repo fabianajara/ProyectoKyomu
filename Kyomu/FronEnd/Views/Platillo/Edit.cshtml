@@ -1,103 +1,85 @@
 ﻿@model FronEnd.Models.PlatilloViewModel
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
 
-
 @{
     ViewData["Title"] = "Editar Platillo";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h1 id="titulo">@ViewData["Title"]</h1>
 
-<form asp-action="Edit" enctype="multipart/form-data">
-    <input type="hidden" asp-for="IdPlatillo" />
-    
-    <div class="form-group">
-        <label asp-for="Nombre" class="control-label"></label>
-        <input asp-for="Nombre" class="form-control" />
-        <span asp-validation-for="Nombre" class="text-danger"></span>
-    </div>
-    
-    <div class="form-group">
-        <label asp-for="Descripcion" class="control-label"></label>
-        <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
-        <span asp-validation-for="Descripcion" class="text-danger"></span>
-    </div>
-    
-    <div class="form-group">
-        <label asp-for="Precio" class="control-label"></label>
-        <input asp-for="Precio" type="number" step="0.01" class="form-control" />
-        <span asp-validation-for="Precio" class="text-danger"></span>
-    </div>
-    
-    <div class="form-group">
-        <label asp-for="IdCategoria" class="control-label">Categoría</label>
-        <select asp-for="IdCategoria" asp-items="Model.CategoriasDisponibles" class="form-control">
-            <option value="">-- Seleccionar Categoría --</option>
-        </select>
-        <span asp-validation-for="IdCategoria" class="text-danger"></span>
-    </div>
-    
-    <div class="form-group">
-        <label class="control-label">Imagen</label>
-        <!-- Contenedor para imagen actual (oculto por defecto) -->
-        <div id="current-image-container">
-            @if (!string.IsNullOrEmpty(Model.Imagen) && System.IO.File.Exists(System.IO.Path.Combine(env.WebRootPath, Model.Imagen.TrimStart('/'))))
-            {
-                <div class="mb-2">
-                    <img src="@Model.Imagen" alt="Imagen actual"
-                         class="img-thumbnail"
-                         style="max-width: 200px; max-height: 200px;" />
+<h4>Modificar Platillo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <input type="hidden" asp-for="IdPlatillo" />
+
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <label asp-for="Descripcion" class="control-label"></label>
+                <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <label asp-for="Precio" class="control-label"></label>
+                <input asp-for="Precio" type="number" step="0.01" class="form-control" />
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <label asp-for="IdCategoria" class="control-label">Categoría</label>
+                <select asp-for="IdCategoria" asp-items="Model.CategoriasDisponibles" class="form-control">
+                    <option value="">-- Seleccionar Categoría --</option>
+                </select>
+                <span asp-validation-for="IdCategoria" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <label class="control-label">Imagen</label>
+                @if (!string.IsNullOrEmpty(Model.Imagen) && System.IO.File.Exists(System.IO.Path.Combine(env.WebRootPath, Model.Imagen.TrimStart('/'))))
+                {
+                    <div class="mb-2">
+                        <img src="@Model.Imagen" alt="Imagen actual"
+                             class="img-thumbnail" style="max-width: 200px;" />
+                    </div>
+                }
+                <div id="new-image-preview" class="mb-2" style="display: none;">
+                    <img id="preview-image" src="#" alt="Nueva imagen"
+                         class="img-thumbnail" style="max-width: 200px;" />
                 </div>
-            }
-            else
-            {
-                <p class="text-muted">No hay imagen actual</p>
-            }
-        </div>
+                <input type="file" name="imagenFile" id="imagenInput"
+                       class="form-control-file" accept="image/*" />
+            </div>
 
-        <!-- Vista previa de la nueva imagen -->
-        <div id="new-image-preview" class="mb-2" style="display: none;">
-            <img id="preview-image" src="#"
-                 alt="Vista previa de nueva imagen"
-                 class="img-thumbnail"
-                 style="max-width: 200px; max-height: 200px;" />
-        </div>
-
-        <!-- Input de archivo con margen superior -->
-        <input type="file" name="imagenFile" id="imagenInput"
-               class="form-control-file mt-1 mb-2"
-               accept="image/*" />
+            <div class="form-group mt-3">
+                <input type="submit" value="Guardar" class="btn btn-outline-warning" />
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+        </form>
     </div>
-    
-    <div class="form-group">
-        <input type="submit" value="Guardar" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-    </div>
-</form>
+</div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script>
-        document.getElementById('imagenInput').addEventListener('change', function (e) {
-            const file = e.target.files[0];
-            const previewContainer = document.getElementById('new-image-preview');
-            const currentImageContainer = document.getElementById('current-image-container');
-            const previewImage = document.getElementById('preview-image');
+        document.getElementById('imagenInput').addEventListener('change', function(e) {
+            const [file] = e.target.files;
+            const preview = document.getElementById('preview-image');
+            const container = document.getElementById('new-image-preview');
 
-            if (file) {
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-                    previewImage.src = e.target.result;
-                    previewContainer.style.display = 'block';
-                    currentImageContainer.style.display = 'none'; // Oculta imagen actual
-                };
-
-                reader.readAsDataURL(file);
+            if(file) {
+                preview.src = URL.createObjectURL(file);
+                container.style.display = 'block';
             } else {
-                previewContainer.style.display = 'none';
-                currentImageContainer.style.display = 'block'; // Muestra imagen actual
+                container.style.display = 'none';
             }
         });
     </script>

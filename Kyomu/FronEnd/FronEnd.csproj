@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\platillos\" />
+    <Folder Include="wwwroot\images\usuarios\" />
   </ItemGroup>
 
 </Project>

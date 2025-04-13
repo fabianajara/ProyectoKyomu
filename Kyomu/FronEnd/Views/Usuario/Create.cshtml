@@ -1,103 +1,98 @@
-﻿@model FronEnd.Models.UsuarioViewModel
+@model FronEnd.Models.UsuarioViewModel
 
 @{
-    ViewData["Title"] = "Registro";
+    ViewData["Title"] = "Agregar Usuario";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h1 id="titulo">@ViewData["Title"]</h1>
 
+<h4>Nuevo Usuario</h4>
+<hr />
 <form asp-action="Create" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row">
         <div class="col-md-6">
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
+                <input asp-for="Nombre" class="form-control" placeholder="Nombre completo" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="CorreoElectronico" class="control-label"></label>
-                <input asp-for="CorreoElectronico" type="email" class="form-control" />
+                <input asp-for="CorreoElectronico" type="email" class="form-control" placeholder="ejemplo@correo.com" />
                 <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="Contraseña" class="control-label"></label>
                 <input asp-for="Contraseña" type="password" class="form-control" />
                 <span asp-validation-for="Contraseña" class="text-danger"></span>
             </div>
-        </div>
 
-        <div class="col-md-6">
-            <div class="form-group">
+            <div class="form-group mt-2">
+                <label asp-for="Telefono" class="control-label"></label>
+                <input asp-for="Telefono" type="tel" class="form-control" placeholder="0000-0000" />
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <label asp-for="Direccion" class="control-label"></label>
+                <input asp-for="Direccion" class="form-control" placeholder="Dirección completa" />
+                <span asp-validation-for="Direccion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
                 <label asp-for="IdRol" class="control-label">Rol</label>
                 <select asp-for="IdRol" asp-items="Model.RolesDisponibles" class="form-control">
                     <option value="">-- Seleccionar Rol --</option>
                 </select>
                 <span asp-validation-for="IdRol" class="text-danger"></span>
             </div>
-
-            <div class="form-group">
-                <label asp-for="Telefono" class="control-label"></label>
-                <input asp-for="Telefono" type="tel" class="form-control" />
-                <span asp-validation-for="Telefono" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Direccion" class="control-label"></label>
-                <input asp-for="Direccion" class="form-control" />
-                <span asp-validation-for="Direccion" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label">Imagen</label>
-
-                <!-- Vista previa de la imagen -->
-                <div id="new-image-preview" class="mb-2" style="display: none;">
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mt-2">
+                <label class="control-label">Imagen de perfil</label>
+                <div id="new-image-preview" class="border p-2 text-center" style="display: none;">
                     <img id="preview-image" src="#"
                          alt="Vista previa de imagen"
                          class="img-thumbnail"
-                         style="max-width: 200px; max-height: 200px;" />
+                         style="max-height: 300px; object-fit: contain;" />
                 </div>
-
-                <!-- Input de archivo -->
                 <input type="file" name="imagenFile" id="imagenInput"
-                       class="form-control-file mt-3"
+                       class="form-control mt-3"
                        accept="image/*" />
             </div>
         </div>
-    </div>
 
-    <div class="form-group mt-4">
-        <input type="submit" value="Crear" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        <div class="form-group mt-3">
+            <input type="submit" value="Registrar" class="btn btn-outline-primary" />
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
     </div>
 </form>
+
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
     <script>
         document.getElementById('imagenInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
             const previewContainer = document.getElementById('new-image-preview');
             const previewImage = document.getElementById('preview-image');
+            const file = e.target.files[0];
 
             if (file) {
                 const reader = new FileReader();
-
                 reader.onload = function(e) {
                     previewImage.src = e.target.result;
                     previewContainer.style.display = 'block';
                 };
-
                 reader.readAsDataURL(file);
             } else {
                 previewContainer.style.display = 'none';
             }
         });
     </script>
-
 }
