@@ -12,7 +12,7 @@
                     <h1>La Mejor Experiencia Sushi, Directo a Tu Mesa</h1>
                     <p>Platos innovadores, ingredientes frescos y una explosión de sabor en cada bocado. Ven y descubre una nueva forma de disfrutar sushi.</p>
                     <div class="d-flex">
-                        <a href="#book-a-table" class="btn-get-started">Book a Table</a>
+                        <a href="#book-a-table" class="btn-get-started">Realizar Pedido</a>
                         <a href="https://www.youtube.com/watch?v=MEcr7DtyTn8" class="glightbox btn-watch-video d-flex align-items-center">
                             <i class="bi bi-play-circle"></i><span>Watch Video</span>
                         </a>
@@ -124,6 +124,16 @@
 
     </section><!-- /Why Us Section -->
 
+	<!-- Menu Section -->
+    @model IEnumerable<FronEnd.Models.PlatilloViewModel>
+
+    @{
+        // Filtrar por IdCategoria
+        var entradas = Model.Where(p => p.IdCategoria == 3); // Entradas
+        var platosFuertes = Model.Where(p => p.IdCategoria == 1); // Sushi
+        var bebidas = Model.Where(p => p.IdCategoria == 2); // Bebidas
+    }
+
     <!-- Menu Section -->
     <section id="menu" class="menu section">
 
@@ -145,12 +155,13 @@
 
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="tab" data-bs-target="#menu-breakfast">
-                        <h4>Platos Fuertes</h4>
-                    </a><!-- End tab nav item -->
-                </li>
+                        <h4>Sushi</h4>
+                    </a>
+                </li><!-- End tab nav item -->
+
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="tab" data-bs-target="#menu-lunch">
-                        <h4>Postres</h4>
+                        <h4>Bebidas</h4>
                     </a>
                 </li><!-- End tab nav item -->
 
@@ -158,244 +169,75 @@
 
             <div class="tab-content">
 
+                <!-- Entradas -->
                 <div class="tab-pane fade active show" id="menu-starters">
-
                     <div class="tab-header text-center">
                         <p>Menu</p>
-                        <h3>Starters</h3>
+                        <h3>Entradas</h3>
                     </div>
-
                     <div class="row gy-5">
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-1.png" class="glightbox"><img src="assets/img/menu/menu-item-1.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Magnam Tiste</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $5.95
-                            </p>
-                        </div><!-- Menu Item -->
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-2.png" class="glightbox"><img src="assets/img/menu/menu-item-2.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Aut Luia</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $14.95
-                            </p>
-                        </div><!-- Menu Item -->
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-3.png" class="glightbox"><img src="assets/img/menu/menu-item-3.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Est Eligendi</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $8.95
-                            </p>
-                        </div><!-- Menu Item -->
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-4.png" class="glightbox"><img src="assets/img/menu/menu-item-4.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Eos Luibusdam</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $12.95
-                            </p>
-                        </div><!-- Menu Item -->
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-5.png" class="glightbox"><img src="assets/img/menu/menu-item-5.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Eos Luibusdam</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $12.95
-                            </p>
-                        </div><!-- Menu Item -->
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-6.png" class="glightbox"><img src="assets/img/menu/menu-item-6.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Laboriosam Direva</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $9.95
-                            </p>
-                        </div><!-- Menu Item -->
-
+                        @foreach (var item in entradas)
+                        {
+                            <div class="col-lg-4 menu-item">
+                                <a href="@item.Imagen" class="glightbox">
+                                    <img src="@item.Imagen" class="menu-img img-fluid" alt="@item.Nombre">
+                                </a>
+                                <h4>@item.Nombre</h4>
+                                <p class="ingredients">@item.Descripcion</p>
+                                <p class="price">@item.Precio.ToString("C")</p>
+                            </div>
+                        }
                     </div>
-                </div><!-- End Starter Menu Content -->
+                </div>
 
+                <!-- Sushi -->
                 <div class="tab-pane fade" id="menu-breakfast">
-
                     <div class="tab-header text-center">
                         <p>Menu</p>
-                        <h3>Breakfast</h3>
+                        <h3>Sushi</h3>
                     </div>
-
                     <div class="row gy-5">
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-1.png" class="glightbox"><img src="assets/img/menu/menu-item-1.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Magnam Tiste</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $5.95
-                            </p>
-                        </div><!-- Menu Item -->
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-2.png" class="glightbox"><img src="assets/img/menu/menu-item-2.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Aut Luia</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $14.95
-                            </p>
-                        </div><!-- Menu Item -->
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-3.png" class="glightbox"><img src="assets/img/menu/menu-item-3.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Est Eligendi</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $8.95
-                            </p>
-                        </div><!-- Menu Item -->
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-4.png" class="glightbox"><img src="assets/img/menu/menu-item-4.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Eos Luibusdam</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $12.95
-                            </p>
-                        </div><!-- Menu Item -->
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-5.png" class="glightbox"><img src="assets/img/menu/menu-item-5.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Eos Luibusdam</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $12.95
-                            </p>
-                        </div><!-- Menu Item -->
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-6.png" class="glightbox"><img src="assets/img/menu/menu-item-6.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Laboriosam Direva</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $9.95
-                            </p>
-                        </div><!-- Menu Item -->
-
+                        @foreach (var item in platosFuertes)
+                        {
+                            <div class="col-lg-4 menu-item">
+                                <a href="@item.Imagen" class="glightbox">
+                                    <img src="@item.Imagen" class="menu-img img-fluid" alt="@item.Nombre">
+                                </a>
+                                <h4>@item.Nombre</h4>
+                                <p class="ingredients">@item.Descripcion</p>
+                                <p class="price">@item.Precio.ToString("C")</p>
+                            </div>
+                        }
                     </div>
-                </div><!-- End Breakfast Menu Content -->
+                </div>
 
+                <!-- Bebidas -->
                 <div class="tab-pane fade" id="menu-lunch">
-
                     <div class="tab-header text-center">
                         <p>Menu</p>
-                        <h3>Lunch</h3>
+                        <h3>Bebidas</h3>
                     </div>
-
                     <div class="row gy-5">
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-1.png" class="glightbox"><img src="assets/img/menu/menu-item-1.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Magnam Tiste</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $5.95
-                            </p>
-                        </div><!-- Menu Item -->
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-2.png" class="glightbox"><img src="assets/img/menu/menu-item-2.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Aut Luia</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $14.95
-                            </p>
-                        </div><!-- Menu Item -->
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-3.png" class="glightbox"><img src="assets/img/menu/menu-item-3.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Est Eligendi</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $8.95
-                            </p>
-                        </div><!-- Menu Item -->
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-4.png" class="glightbox"><img src="assets/img/menu/menu-item-4.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Eos Luibusdam</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $12.95
-                            </p>
-                        </div><!-- Menu Item -->
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-5.png" class="glightbox"><img src="assets/img/menu/menu-item-5.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Eos Luibusdam</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $12.95
-                            </p>
-                        </div><!-- Menu Item -->
-
-                        <div class="col-lg-4 menu-item">
-                            <a href="assets/img/menu/menu-item-6.png" class="glightbox"><img src="assets/img/menu/menu-item-6.png" class="menu-img img-fluid" alt=""></a>
-                            <h4>Laboriosam Direva</h4>
-                            <p class="ingredients">
-                                Lorem, deren, trataro, filede, nerada
-                            </p>
-                            <p class="price">
-                                $9.95
-                            </p>
-                        </div><!-- Menu Item -->
-
+                        @foreach (var item in bebidas)
+                        {
+                            <div class="col-lg-4 menu-item">
+                                <a href="@item.Imagen" class="glightbox">
+                                    <img src="@item.Imagen" class="menu-img img-fluid" alt="@item.Nombre">
+                                </a>
+                                <h4>@item.Nombre</h4>
+                                <p class="ingredients">@item.Descripcion</p>
+                                <p class="price">@item.Precio.ToString("C")</p>
+                            </div>
+                        }
                     </div>
-                </div><!-- End Lunch Menu Content -->
+                </div>
 
             </div>
 
         </div>
     </section>
+
+
 
     <!-- Testimonials Section -->
     <section id="testimonials" class="testimonials section light-background">
