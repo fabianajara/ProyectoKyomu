@@ -1,6 +1,6 @@
-﻿namespace BackEnd.DTO
+﻿namespace FronEnd.ApiModels
 {
-    public class LoginDTO
+    public class LoginAPI
     {
         public string CorreoElectronico { get; set; } = null!;
         public string Contraseña { get; set; } = null!;
