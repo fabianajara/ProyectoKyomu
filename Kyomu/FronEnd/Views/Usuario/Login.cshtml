@@ -1,25 +1,42 @@
 ﻿@model FronEnd.Models.UsuarioViewModel
 
-<h2>Iniciar Sesión</h2>
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+}
 
-<form asp-action="Login" method="post">
-    <div class="form-group">
-        <label asp-for="CorreoElectronico">Correo</label>
-        <input asp-for="CorreoElectronico" class="form-control" />
+<section class="d-flex align-items-center justify-content-center" style="min-height: 100vh; background-color: #f8f9fa;">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+        <h2 class="text-center mb-4">Iniciar Sesión</h2>
+        <form asp-action="Login" method="post">
+            <div class="mb-3">
+                <label asp-for="CorreoElectronico" class="form-label">Correo electrónico</label>
+                <input asp-for="CorreoElectronico" class="form-control" placeholder="ejemplo@correo.com" />
+                <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Contraseña" class="form-label">Contraseña</label>
+                <input asp-for="Contraseña" class="form-control" type="password" placeholder="********" />
+                <span asp-validation-for="Contraseña" class="text-danger"></span>
+            </div>
+            @if (TempData["LoginError"] != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @TempData["LoginError"]
+                </div>
+            }
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary">Ingresar</button>
+            </div>
+            <div class="text-center">
+                ¿No tienes cuenta? <a asp-controller="Usuario" asp-action="Create">Regístrate</a>
+            </div>
+        </form>
     </div>
+</section>
 
-    <div class="form-group">
-        <label asp-for="Contraseña">Contraseña</label>
-        <input asp-for="Contraseña" type="password" class="form-control" />
-    </div>
-
-    @if (ViewBag.Error != null)
-    {
-        <div class="alert alert-danger mt-2">@ViewBag.Error</div>
-    }
-
-    <button type="submit" class="btn btn-primary mt-3">Ingresar</button>
-</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
 
 
 
