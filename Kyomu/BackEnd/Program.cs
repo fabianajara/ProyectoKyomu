@@ -45,6 +45,8 @@ builder.Services.AddScoped<IDetalleService, DetalleService>();
 
 builder.Services.AddScoped<IMetodoPagoDAL, MetodoPagoDAL>();
 builder.Services.AddScoped<IMetodoPagoService, MetodoPagoService>();
+
+
 #endregion
 
 var app = builder.Build();
@@ -56,7 +58,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<ApiKeyMiddleware>();
+//app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

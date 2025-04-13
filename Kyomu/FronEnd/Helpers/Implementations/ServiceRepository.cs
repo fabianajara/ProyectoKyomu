@@ -14,7 +14,7 @@ namespace FronEnd.Helpers.Implementations
 
             Client.BaseAddress = new Uri(baseUrl);
 
-            Client.DefaultRequestHeaders.Add("ApiKey", apiKey);
+            //Client.DefaultRequestHeaders.Add("ApiKey", apiKey);
 
 
         }

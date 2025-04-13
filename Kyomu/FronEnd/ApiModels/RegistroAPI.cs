@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace FronEnd.Models
+﻿namespace FronEnd.ApiModels
 {
-    public class UsuarioViewModel
+    public class RegistroAPI
     {
         public int IdUsuario { get; set; }
-        public int? IdRol { get; set; }
         public string Nombre { get; set; } = null!;
         public string? Telefono { get; set; }
         public string CorreoElectronico { get; set; } = null!;
@@ -13,7 +10,5 @@ namespace FronEnd.Models
         public string ConfirmarContraseña { get; set; } = null!;
         public string? Direccion { get; set; }
         public string? Imagen { get; set; }
-        public IEnumerable<SelectListItem>? RolesDisponibles { get; set; }
-        public bool CoincideContraseñas => Contraseña == ConfirmarContraseña;
     }
 }
