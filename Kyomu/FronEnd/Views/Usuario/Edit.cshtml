@@ -5,118 +5,113 @@
     ViewData["Title"] = "Editar Usuario";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h1 id="titulo">@ViewData["Title"]</h1>
 
+<h4>Modificar datos del usuario</h4>
+<hr />
 <form asp-action="Edit" enctype="multipart/form-data">
     <input type="hidden" asp-for="IdUsuario" />
 
     <div class="row">
         <div class="col-md-6">
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="Nombre" class="control-label"></label>
                 <input asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="CorreoElectronico" class="control-label"></label>
                 <input asp-for="CorreoElectronico" type="email" class="form-control" />
                 <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="Contraseña" class="control-label"></label>
-                <input asp-for="Contraseña" type="password" class="form-control" />
+                <input asp-for="Contraseña" type="password" class="form-control" placeholder="Dejar en blanco para no cambiar" />
                 <span asp-validation-for="Contraseña" class="text-danger"></span>
             </div>
-        </div>
 
-        <div class="col-md-6">
-            <div class="form-group">
+            <div class="form-group mt-2">
+                <label asp-for="Telefono" class="control-label"></label>
+                <input asp-for="Telefono" type="tel" class="form-control" />
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <label asp-for="Direccion" class="control-label"></label>
+                <input asp-for="Direccion" class="form-control" />
+                <span asp-validation-for="Direccion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
                 <label asp-for="IdRol" class="control-label">Rol</label>
                 <select asp-for="IdRol" asp-items="Model.RolesDisponibles" class="form-control">
                     <option value="">-- Seleccionar Rol --</option>
                 </select>
                 <span asp-validation-for="IdRol" class="text-danger"></span>
             </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mt-2">
+                <label class="control-label">Imagen actual</label>
+                @if (!string.IsNullOrEmpty(Model.Imagen) && System.IO.File.Exists(System.IO.Path.Combine(env.WebRootPath, Model.Imagen.TrimStart('/'))))
+                {
+                    <div class="border p-2 text-center">
+                        <img src="@Model.Imagen"
+                             alt="Imagen actual"
+                             class="img-thumbnail"
+                             style="max-height: 300px; object-fit: contain;" />
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center text-muted p-3 border">
+                        <i class="bi bi-image fs-1"></i>
+                        <p class="mt-2">Sin imagen actual</p>
+                    </div>
+                }
 
-            <div class="form-group">
-                <label asp-for="Telefono" class="control-label"></label>
-                <input asp-for="Telefono" type="tel" class="form-control" />
-                <span asp-validation-for="Telefono" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Direccion" class="control-label"></label>
-                <input asp-for="Direccion" class="form-control" />
-                <span asp-validation-for="Direccion" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label">Imagen</label>
-                <!-- Contenedor para imagen actual (oculto por defecto) -->
-                <div id="current-image-container">
-                    @if (!string.IsNullOrEmpty(Model.Imagen) && System.IO.File.Exists(System.IO.Path.Combine(env.WebRootPath, Model.Imagen.TrimStart('/'))))
-                    {
-                        <div class="mb-2">
-                            <img src="@Model.Imagen" alt="Imagen actual"
-                                 class="img-thumbnail"
-                                 style="max-width: 200px; max-height: 200px;" />
-                        </div>
-                    }
-                    else
-                    {
-                        <p class="text-muted">No hay imagen actual</p>
-                    }
-                </div>
-
-                <!-- Vista previa de la nueva imagen -->
-                <div id="new-image-preview" class="mb-2" style="display: none;">
+                <div id="new-image-preview" class="border p-2 text-center mt-3" style="display: none;">
                     <img id="preview-image" src="#"
-                         alt="Vista previa de nueva imagen"
+                         alt="Nueva imagen"
                          class="img-thumbnail"
-                         style="max-width: 200px; max-height: 200px;" />
+                         style="max-height: 300px; object-fit: contain;" />
                 </div>
 
-                <!-- Input de archivo con margen superior -->
                 <input type="file" name="imagenFile" id="imagenInput"
-                       class="form-control-file mt-1 mb-2"
+                       class="form-control mt-3"
                        accept="image/*" />
             </div>
         </div>
-    </div>
 
-    <div class="form-group mt-4">
-        <input type="submit" value="Guardar" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        <div class="form-group mt-3">
+            <input type="submit" value="Guardar" class="btn btn-outline-warning" />
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
     </div>
 </form>
+        
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
     <script>
-        document.getElementById('imagenInput').addEventListener('change', function (e) {
-            const file = e.target.files[0];
+        document.getElementById('imagenInput').addEventListener('change', function(e) {
             const previewContainer = document.getElementById('new-image-preview');
-            const currentImageContainer = document.getElementById('current-image-container');
             const previewImage = document.getElementById('preview-image');
+            const file = e.target.files[0];
 
             if (file) {
                 const reader = new FileReader();
-
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     previewImage.src = e.target.result;
                     previewContainer.style.display = 'block';
-                    currentImageContainer.style.display = 'none'; // Oculta imagen actual
                 };
-
                 reader.readAsDataURL(file);
             } else {
                 previewContainer.style.display = 'none';
-                currentImageContainer.style.display = 'block'; // Muestra imagen actual
             }
         });
     </script>
