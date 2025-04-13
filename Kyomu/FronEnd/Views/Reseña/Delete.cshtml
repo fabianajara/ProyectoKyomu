@@ -8,42 +8,34 @@
     var platillo = _platilloHelper.GetPlatillo(Model.IdPlatillo);
 }
 
-<h1 id="titulo">@ViewData["Title"]</h1>
+<h2>@ViewData["Title"]</h2>
 
-<h3 class="text-danger">¿Está seguro de eliminar esta reseña?</h3>
+<h3 class="text-danger">¿Está seguro de que desea eliminar esta reseña?</h3>
 
-<div class="card shadow-sm">
+<div class="card">
+    <div class="card-header">
+        <h4>Reseña #@Model.IdReseña</h4>
+    </div>
     <div class="card-body">
-        <h5 class="card-title">@platillo?.Nombre</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Por: @usuario?.Nombre</h6>
+        <dl class="row">
+            <dt class="col-sm-3">Usuario:</dt>
+            <dd class="col-sm-9">@usuario?.Nombre</dd>
 
-        <div class="star-rating mb-3">
-            @for (var i = 1; i <= 5; i++)
-            {
-                <span class="fa fa-star @(i <= Model.Calificacion ? "checked" : "")"></span>
-            }
-        </div>
+            <dt class="col-sm-3">Platillo:</dt>
+            <dd class="col-sm-9">@platillo?.Nombre</dd>
 
-        <p class="card-text">@Model.Comentario</p>
+            <dt class="col-sm-3">Calificación:</dt>
+            <dd class="col-sm-9">@Model.Calificacion</dd>
 
+            <dt class="col-sm-3">Comentario:</dt>
+            <dd class="col-sm-9">@Model.Comentario</dd>
+        </dl>
+    </div>
+    <div class="card-footer">
         <form asp-action="Delete">
             <input type="hidden" asp-for="IdReseña" />
-            <button type="submit" class="btn btn-outline-danger">Confirmar</button>
-            <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-danger">Confirmar Eliminación</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
         </form>
     </div>
 </div>
-
-<style>
-    .star-rating {
-        direction: ltr;
-    }
-    .star-rating .fa-star {
-        color: #ccc;
-        font-size: 1.2em;
-    }
-
-    .star-rating .checked {
-        color: orange;
-    }
-</style>

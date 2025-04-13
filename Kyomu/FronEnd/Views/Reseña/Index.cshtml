@@ -3,96 +3,45 @@
 @inject FronEnd.Helpers.Interfaces.IPlatilloHelper _platilloHelper
 
 @{
-    ViewData["Title"] = "Reseñas";
+    ViewData["Title"] = "Listado de Reseñas";
 }
 
-<h1 id="titulo">@ViewData["Title"]</h1>
+<h2>@ViewData["Title"]</h2>
 
-<div class="d-flex align-items-center mb-3">
-    <a class="btn btn-outline-primary me-3" asp-action="Create">Nueva Reseña</a>
-    <div class="input-group" style="max-width: 300px;">
-        <span class="input-group-text" id="search-addon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.442 1.398a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z" />
-            </svg>
-        </span>
-        <input type="search" id="search-box" class="form-control" placeholder="Buscar reseñas" aria-describedby="search-addon">
-    </div>
-</div>
+<p>
+    <a asp-action="Create" class="btn btn-primary">Nueva Reseña</a>
+</p>
 
-<div class="row" id="cardsContainer">
-    @foreach (var item in Model)
-    {
-        var usuario = _usuarioHelper.GetUsuario(item.IdUsuario);
-        var platillo = _platilloHelper.GetPlatillo(item.IdPlatillo);
-
-        <div class="col-md-4 card-container">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">@platillo?.Nombre</h5>
-                    <div class="card-text mb-2">
-                        <small class="text-muted">Por: @usuario?.Nombre</small>
-                        <div class="star-rating small-stars">
-                            @for (var i = 1; i <= 5; i++)
-                            {
-                                <span class="fa fa-star @(i <= item.Calificacion ? "checked" : "")"></span>
-                            }
-                        </div>
+<table class="table table-striped table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Platillo</th>
+            <th>Calificación</th>
+            <th>Comentario</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var usuario = _usuarioHelper.GetUsuario(item.IdUsuario);
+            var platillo = _platilloHelper.GetPlatillo(item.IdPlatillo);
+            <tr>
+                <td>@item.IdReseña</td>
+                <td>@(usuario?.Nombre ?? "Desconocido")</td>
+                <td>@(platillo?.Nombre ?? "Desconocido")</td>
+                <td>@item.Calificacion</td>
+                <td>@item.Comentario</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a asp-action="Edit" asp-route-id="@item.IdReseña" class="btn btn-sm btn-warning">Editar</a>
+                        <a asp-action="Details" asp-route-id="@item.IdReseña" class="btn btn-sm btn-info">Detalles</a>
+                        <a asp-action="Delete" asp-route-id="@item.IdReseña" class="btn btn-sm btn-danger">Eliminar</a>
                     </div>
-                    <p class="card-text">
-                        @(item.Comentario?.Length > 100 ? item.Comentario.Substring(0, 100) + "..." : item.Comentario)
-                    </p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                            @Html.ActionLink("Detalles", "Details", new { id = item.IdReseña }, new { @class = "btn btn-sm btn-outline-secondary" })
-                            @Html.ActionLink("Editar", "Edit", new { id = item.IdReseña }, new { @class = "btn btn-sm btn-outline-warning" })
-                            <form asp-action="Delete" method="post" class="d-inline">
-                                <input type="hidden" name="id" value="@item.IdReseña" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
-                            </form>
-                        </div>
-                        <small class="text-muted">ID: @item.IdReseña</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-</div>
-
-@section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var searchBox = document.getElementById("search-box");
-
-            function filterCards() {
-                var filter = searchBox.value.toLowerCase();
-                var cards = document.querySelectorAll(".card-container");
-
-                cards.forEach(function(card) {
-                    var cardText = card.textContent.toLowerCase();
-                    card.style.display = (cardText.indexOf(filter) !== -1) ? "block" : "none";
-                });
-            }
-
-            searchBox.addEventListener("keyup", filterCards);
-        });
-    </script>
-}
-
-<style>
-    .star-rating {
-        direction: ltr;
-    }
-    .star-rating .fa-star {
-        color: #ccc;
-        font-size: 1em;
-    }
-
-    .star-rating .checked {
-        color: orange;
-    }
-
-    .small-stars .fa-star {
-        font-size: 0.8em;
-    }
-</style>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

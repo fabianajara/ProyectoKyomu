@@ -1,47 +1,46 @@
 ﻿@model FronEnd.Models.DetallePedidoViewModel
 
 @{
-    ViewData["Title"] = "Eliminar Detalle";
+    ViewData["Title"] = "Eliminar Detalle de Pedido";
 }
 
-<h1 id="titulo">@ViewData["Title"]</h1>
-
-<h3>¿Está seguro que desea eliminar este detalle de pedido?</h3>
+<h3>¿Está seguro que desea eliminar este detalle?</h3>
 <div>
+    <h4>Detalle de Pedido</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            ID Detalle
+            @Html.DisplayNameFor(model => model.IdDetallePedido)
         </dt>
         <dd class="col-sm-10">
-            @Model.IdDetallePedido
+            @Html.DisplayFor(model => model.IdDetallePedido)
         </dd>
 
         <dt class="col-sm-2">
             Pedido
         </dt>
         <dd class="col-sm-10">
-            #@Model.IdPedido
+            @ViewBag.PedidoInfo
         </dd>
 
         <dt class="col-sm-2">
             Platillo
         </dt>
         <dd class="col-sm-10">
-            #@Model.IdPlatillo
+            @ViewBag.PlatilloInfo
         </dd>
 
         <dt class="col-sm-2">
-            Cantidad
+            @Html.DisplayNameFor(model => model.Cantidad)
         </dt>
         <dd class="col-sm-10">
-            @Model.Cantidad
+            @Html.DisplayFor(model => model.Cantidad)
         </dd>
     </dl>
 
     <form asp-action="Delete">
         <input type="hidden" asp-for="IdDetallePedido" />
-        <button type="submit" class="btn btn-outline-danger">Eliminar</button>
-        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+        <input type="submit" value="Eliminar" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>

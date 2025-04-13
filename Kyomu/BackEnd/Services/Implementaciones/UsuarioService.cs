@@ -2,7 +2,6 @@
 using BackEnd.Services.Interfaces;
 using DAL.Interfaces;
 using Entities.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace BackEnd.Services.Implementations
 {
@@ -45,64 +44,6 @@ namespace BackEnd.Services.Implementations
                 Imagen = usuario.Imagen
             };
         }
-
-        // Login
-        public UsuarioDTO Login(string correo, string contraseña)
-        {
-            var usuario = _unidadDeTrabajo.UsuarioDAL.GetAll()
-                .FirstOrDefault(u => u.CorreoElectronico == correo && u.Contraseña == contraseña);
-
-            if (usuario == null) return null;
-
-            return new UsuarioDTO
-            {
-                IdUsuario = usuario.IdUsuario,
-                IdRol = usuario.IdRol,
-                Nombre = usuario.Nombre,
-                Telefono = usuario.Telefono,
-                CorreoElectronico = usuario.CorreoElectronico,
-                Contraseña = usuario.Contraseña,
-                Direccion = usuario.Direccion,
-                Imagen = usuario.Imagen
-            };
-        }
-
-
-        // Registro
-        public bool Registro(UsuarioDTO usuarioDTO)
-        {
-            // Verificar si ya existe un usuario con el mismo correo
-            var usuarioExistente = _unidadDeTrabajo.UsuarioDAL.GetAll()
-                .FirstOrDefault(u => u.CorreoElectronico == usuarioDTO.CorreoElectronico);
-
-            if (usuarioExistente != null)
-            {
-                return false;  // El correo ya está registrado
-            }
-
-            // Crear el nuevo usuario
-            var nuevoUsuario = new Usuario
-            {
-                Nombre = usuarioDTO.Nombre,
-                CorreoElectronico = usuarioDTO.CorreoElectronico,
-                Contraseña = usuarioDTO.Contraseña, // Aquí debes usar hash para la contraseña
-                Telefono = usuarioDTO.Telefono,
-                Direccion = usuarioDTO.Direccion,
-                Imagen = usuarioDTO.Imagen
-            };
-
-            _unidadDeTrabajo.UsuarioDAL.Add(nuevoUsuario);
-            _unidadDeTrabajo.Complete();
-            return true;  // Registro exitoso
-        }
-
-        public UsuarioDTO GetUsuarioByCorreo(string correo)
-        {
-            var usuario = _unidadDeTrabajo.UsuarioDAL.GetAllUsuarios()
-                            .FirstOrDefault(u => u.CorreoElectronico == correo);
-            return usuario == null ? null : Convertir(usuario);
-        }
-
         public void Add(UsuarioDTO usuario)
         {
             var usuarioEntity = Convertir(usuario);

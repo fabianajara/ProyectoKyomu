@@ -2,90 +2,59 @@
 @inject FronEnd.Helpers.Interfaces.IUsuarioHelper _usuarioHelper
 
 @{
-    ViewData["Title"] = "Pedidos";
+    ViewData["Title"] = "Listado de Pedidos";
 }
 
-<h1 id="titulo">@ViewData["Title"]</h1>
+<h2>@ViewData["Title"]</h2>
 
-<div class="d-flex align-items-center mb-3">
-    <a class="btn btn-outline-primary me-3" asp-action="Create">Nuevo Pedido</a>
-    <div class="input-group" style="max-width: 300px;">
-        <span class="input-group-text" id="search-addon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.442 1.398a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z" />
-            </svg>
-        </span>
-        <input type="search" id="search-box" class="form-control" placeholder="Buscar pedidos" aria-describedby="search-addon">
-    </div>
-</div>
+<p>
+    <a asp-action="Create" class="btn btn-primary">Nuevo Pedido</a>
+</p>
 
-<div class="row" id="cardsContainer">
-    @foreach (var item in Model)
-    {
-        var usuario = _usuarioHelper.GetUsuario(item.IdUsuario);
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Fecha Pedido</th>
+            <th>Fecha Entrega</th>
+            <th>Tipo Entrega</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var usuario = _usuarioHelper.GetUsuario(item.IdUsuario);
 
-        <div class="col-md-4 card-container">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Pedido #@item.IdPedido</h5>
-                    <div class="card-text mb-2">
-                        <small class="text-muted">Usuario:</small><br>
-                        @usuario?.Nombre <span class="text-muted">(@usuario?.CorreoElectronico)</span>
-                    </div>
-                    <div class="card-text mb-2">
-                        <small class="text-muted">Fecha:</small><br>
-                        @item.FechaPedido.ToString("dd/MM/yyyy HH:mm")
-                    </div>
-                    <div class="card-text mb-2">
-                        <small class="text-muted">Estado:</small><br>
-                        <span class="badge @GetEstadoBadgeClass(item.Estado)">@item.Estado</span>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <div class="btn-group">
-                            @Html.ActionLink("Detalles", "Details", new { id = item.IdPedido }, new { @class = "btn btn-sm btn-outline-secondary" })
-                            @Html.ActionLink("Editar", "Edit", new { id = item.IdPedido }, new { @class = "btn btn-sm btn-outline-warning" })
-                            <form asp-action="Delete" method="post" class="d-inline">
-                                <input type="hidden" name="id" value="@item.IdPedido" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
-                            </form>
-                        </div>
-                        <small class="text-muted">@item.Total.ToString("C")</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-</div>
-
-@section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var searchBox = document.getElementById("search-box");
-
-            function filterCards() {
-                var filter = searchBox.value.toLowerCase();
-                var cards = document.querySelectorAll(".card-container");
-
-                cards.forEach(function(card) {
-                    var cardText = card.textContent.toLowerCase();
-                    card.style.display = (cardText.indexOf(filter) !== -1) ? "block" : "none";
-                });
-            }
-
-            searchBox.addEventListener("keyup", filterCards);
-        });
-    </script>
-}
-
+            <tr>
+                <td>@item.IdPedido</td>
+                <td>@usuario?.Nombre (@usuario?.CorreoElectronico)</td>
+                <td>@item.FechaPedido.ToString("dd/MM/yyyy")</td>
+                <td>@(item.FechaEntrega?.ToString("dd/MM/yyyy HH:mm") ?? "Pendiente")</td>
+                <td>@item.TipoEntrega</td>
+                <td>@item.Total.ToString("C")</td>
+                <td>@item.Estado</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdPedido" class="btn btn-sm btn-warning">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.IdPedido" class="btn btn-sm btn-info">Detalles</a>
+                    <a asp-action="Delete" asp-route-id="@item.IdPedido" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 @functions {
     string GetEstadoBadgeClass(string estado)
     {
         return estado switch
         {
-            "Completado" => "badge bg-success",
-            "En proceso" => "badge bg-primary",
-            "Cancelado" => "badge bg-danger",
-            _ => "badge bg-secondary",
+            "Completado" => "badge-success",
+            "En proceso" => "badge-primary",
+            "Cancelado" => "badge-danger",
+            _ => "badge-secondary",
         };
     }
 }

@@ -1,5 +1,4 @@
 ﻿@model FronEnd.Models.PlatilloViewModel
-@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
 @inject FronEnd.Helpers.Interfaces.ICategoriaHelper _categoriaHelper
 
 @{
@@ -8,38 +7,40 @@
         _categoriaHelper.GetCategoria(Model.IdCategoria.Value) : null;
 }
 
-<h1 id="titulo">@ViewData["Title"]</h1>
+<h2>@ViewData["Title"]</h2>
 
-<div class="card shadow-sm">
-    <div class="row g-0">
-        <div class="col-md-4">
-            @if (!string.IsNullOrEmpty(Model.Imagen) && System.IO.File.Exists(System.IO.Path.Combine(env.WebRootPath, Model.Imagen.TrimStart('/'))))
-            {
-                <img src="@Model.Imagen" class="img-fluid rounded-start" alt="Imagen del platillo">
-            }
-            else
-            {
-                <div class="d-flex align-items-center justify-content-center bg-light" style="height: 100%;">
-                    <p class="text-muted mb-0">Sin imagen</p>
-                </div>
-            }
-        </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title">@Model.Nombre</h5>
-                <p class="card-text">@Model.Descripcion</p>
+<div class="card">
+    <div class="card-header">
+        <h4>@Model.Nombre</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                @if (!string.IsNullOrEmpty(Model.Imagen))
+                {
+                    <img src="@Model.Imagen" alt="Imagen del platillo" class="img-fluid" />
+                }
+                else
+                {
+                    <div class="text-muted">No hay imagen disponible</div>
+                }
+            </div>
+            <div class="col-md-8">
                 <dl class="row">
+                    <dt class="col-sm-3">Descripción:</dt>
+                    <dd class="col-sm-9">@Model.Descripcion</dd>
+
                     <dt class="col-sm-3">Precio:</dt>
                     <dd class="col-sm-9">@Model.Precio.ToString("C")</dd>
 
                     <dt class="col-sm-3">Categoría:</dt>
                     <dd class="col-sm-9">@(categoria?.NombreCategoria ?? "Sin categoría")</dd>
                 </dl>
-                <div class="mt-3">
-                    @Html.ActionLink("Editar", "Edit", new { id = Model.IdPlatillo }, new { @class = "btn btn-outline-warning" })
-                    <a asp-action="Index" class="btn btn-outline-secondary">Volver</a>
-                </div>
             </div>
         </div>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model.IdPlatillo" class="btn btn-warning">Editar</a>
+        <a asp-action="Index" class="btn btn-secondary">Volver al Listado</a>
     </div>
 </div>

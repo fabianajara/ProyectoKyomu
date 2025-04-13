@@ -101,30 +101,5 @@ namespace FronEnd.Helpers.Implementations
                 return null;
             }
         }
-
-        public UsuarioViewModel GetUsuarioByCorreo(string correo)
-        {
-            HttpResponseMessage response = _ServiceRepository.GetResponse($"api/Usuario/GetUsuarioByCorreo?correo={correo}");
-            if (response.IsSuccessStatusCode)
-            {
-                var content = response.Content.ReadAsStringAsync().Result;
-                var usuarioAPI = JsonConvert.DeserializeObject<UsuarioAPI>(content);
-                return Convertir(usuarioAPI);
-            }
-            return null;
-        }
-
-        public UsuarioViewModel Login(string correo, string contraseña)
-        {
-            HttpResponseMessage response = _ServiceRepository.GetResponse($"api/Usuario/Login?correo={correo}&contraseña={contraseña}");
-            if (response.IsSuccessStatusCode)
-            {
-                var content = response.Content.ReadAsStringAsync().Result;
-                var usuarioAPI = JsonConvert.DeserializeObject<UsuarioAPI>(content);
-                return Convertir(usuarioAPI);
-            }
-            return null;
-        }
-
     }
 }
