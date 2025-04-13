@@ -8,7 +8,7 @@
     var platillo = _platilloHelper.GetPlatillo(Model.IdPlatillo);
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1 id="titulo">@ViewData["Title"]</h1>
 
 <div>
     <h4>Información Completa</h4>
@@ -20,22 +20,20 @@
         <dt class="col-sm-3">Pedido:</dt>
         <dd class="col-sm-9">
             #@Model.IdPedido - @(pedido?.FechaPedido.ToString("dd/MM/yyyy") ?? "N/A")
-            <br /><small class="text-muted">Estado: @(pedido?.Estado ?? "N/A")</small>
+            <small class="text-muted d-block">Estado: @(pedido?.Estado ?? "N/A")</small>
         </dd>
 
         <dt class="col-sm-3">Platillo:</dt>
         <dd class="col-sm-9">
             #@Model.IdPlatillo - @(platillo?.Nombre ?? "N/A")
-            <br /><small class="text-muted">Precio: $@(platillo?.Precio.ToString() ?? "N/A") - Categoría: @(platillo?.IdCategoria.ToString() ?? "N/A")</small>
+            <small class="text-muted d-block">Precio: $@(platillo?.Precio.ToString("N2") ?? "N/A")</small>
         </dd>
 
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Cantidad):</dt>
+        <dt class="col-sm-3">Cantidad:</dt>
         <dd class="col-sm-9">@Model.Cantidad</dd>
     </dl>
 </div>
-<div>
-    <div class="btn-group" role="group">
-        @Html.ActionLink("Editar", "Edit", new { id = Model.IdDetallePedido }, new { @class = "btn btn-warning" })
-        <a asp-action="Index" class="btn btn-secondary">Volver al Listado</a>
-    </div>
+<div class="form-group mt-3">
+    @Html.ActionLink("Editar", "Edit", new { id = Model.IdDetallePedido }, new { @class = "btn btn-outline-warning" })
+    <a asp-action="Index" class="btn btn-outline-secondary">Volver</a>
 </div>
