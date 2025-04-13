@@ -3,55 +3,76 @@
 @inject FronEnd.Helpers.Interfaces.ICategoriaHelper _categoriaHelper
 
 @{
-    ViewData["Title"] = "Listado de Platillos";
+    ViewData["Title"] = "Platillos";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h1 id="titulo">@ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Nuevo Platillo</a>
-</p>
+<div class="d-flex align-items-center mb-3">
+    <a class="btn btn-outline-primary me-3" asp-action="Create">Nuevo Platillo</a>
+    <div class="input-group" style="max-width: 300px;">
+        <span class="input-group-text" id="search-addon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.442 1.398a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z" />
+            </svg>
+        </span>
+        <input type="search" id="search-box" class="form-control" placeholder="Buscar platillos" aria-describedby="search-addon">
+    </div>
+</div>
 
-<table class="table table-striped table-hover">
-    <thead class="thead-dark">
-        <tr>
-            <th>Imagen</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Precio</th>
-            <th>Categoría</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            var categoria = item.IdCategoria.HasValue ?
-            _categoriaHelper.GetCategoria(item.IdCategoria.Value) : null;
+<div class="row" id="cardsContainer">
+    @foreach (var item in Model)
+    {
+        var categoria = item.IdCategoria.HasValue ?
+        _categoriaHelper.GetCategoria(item.IdCategoria.Value) : null;
 
-            <tr>
-                <td>
-                    @if (!string.IsNullOrEmpty(item.Imagen) && System.IO.File.Exists(System.IO.Path.Combine(env.WebRootPath, item.Imagen.TrimStart('/'))))
-                    {
-                        <img src="@item.Imagen" alt="Imagen del platillo" style="max-width: 80px; max-height: 80px;" />
-                    }
-                    else
-                    {
-                        <p class="text-muted">No hay imagen disponible</p>
-                    }
-                </td>
-                <td>@item.Nombre</td>
-                <td>@(item.Descripcion?.Length > 50 ? item.Descripcion.Substring(0, 50) + "..." : item.Descripcion)</td>
-                <td>@item.Precio.ToString("C")</td>
-                <td>@(categoria?.NombreCategoria ?? "Sin categoría")</td>
-                <td>
-                    <div class="btn-group" role="group">
-                        <a asp-action="Edit" asp-route-id="@item.IdPlatillo" class="btn btn-sm btn-warning">Editar</a>
-                        <a asp-action="Details" asp-route-id="@item.IdPlatillo" class="btn btn-sm btn-info">Detalles</a>
-                        <a asp-action="Delete" asp-route-id="@item.IdPlatillo" class="btn btn-sm btn-danger">Eliminar</a>
+        <div class="col-md-4 card-container">
+            <div class="card mb-4 shadow-sm">
+                @if (!string.IsNullOrEmpty(item.Imagen) && System.IO.File.Exists(System.IO.Path.Combine(env.WebRootPath, item.Imagen.TrimStart('/'))))
+                {
+                    <img src="@item.Imagen" class="card-img-top" alt="Imagen del platillo" style="height: 200px; object-fit: cover;">
+                }
+                <div class="card-body">
+                    <h5 class="card-title">@item.Nombre</h5>
+                    <p class="card-text">
+                        @(item.Descripcion?.Length > 100 ? item.Descripcion.Substring(0, 100) + "..." : item.Descripcion)
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            @Html.ActionLink("Detalles", "Details", new { id = item.IdPlatillo }, new { @class = "btn btn-sm btn-outline-secondary" })
+                            @Html.ActionLink("Editar", "Edit", new { id = item.IdPlatillo }, new { @class = "btn btn-sm btn-outline-warning" })
+                            <form asp-action="Delete" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@item.IdPlatillo" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                            </form>
+                        </div>
+                        <small class="text-muted">@item.Precio.ToString("C")</small>
                     </div>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <small class="text-muted">@(categoria?.NombreCategoria ?? "Sin categoría")</small>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var searchBox = document.getElementById("search-box");
+
+            function filterCards() {
+                var filter = searchBox.value.toLowerCase();
+                var cards = document.querySelectorAll(".card-container");
+
+                cards.forEach(function(card) {
+                    var cardText = card.textContent.toLowerCase();
+                    card.style.display = (cardText.indexOf(filter) !== -1) ? "block" : "none";
+                });
+            }
+
+            searchBox.addEventListener("keyup", filterCards);
+        });
+    </script>
+}
