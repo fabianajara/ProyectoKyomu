@@ -9,5 +9,7 @@ namespace BackEnd.Services.Interfaces
         void Update(DetallePedidoDTO detalle);
         void Delete(int id);
         DetallePedidoDTO GetDetalleById(int id);
+
+        List<DetallePedidoDTO> GetDetallesByPedidoId(int idPedido);
     }
 }

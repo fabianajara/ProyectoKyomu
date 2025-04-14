@@ -2,6 +2,7 @@
 using BackEnd.Services.Interfaces;
 using DAL.Interfaces;
 using Entities.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -73,6 +74,14 @@ namespace BackEnd.Services.Implementations
         {
             var result = _unidadDeTrabajo.DetalleDAL.Get(id);
             return result != null ? Convertir(result) : null;
+        }
+
+        public List<DetallePedidoDTO> GetDetallesByPedidoId(int idPedido)
+        {
+            return _unidadDeTrabajo.DetalleDAL.GetAll()
+                .Where(d => d.IdPedido == idPedido)
+                .Select(d => Convertir(d))
+                .ToList();
         }
     }
 }

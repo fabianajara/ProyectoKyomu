@@ -21,6 +21,8 @@ builder.Services.AddScoped<IPlatilloHelper, PlatilloHelper>();
 builder.Services.AddScoped<IReseñaHelper, ReseñaHelper>();
 builder.Services.AddScoped<IRolHelper, RolHelper>();
 builder.Services.AddScoped<IUsuarioHelper, UsuarioHelper>();
+builder.Services.AddScoped<ICarritoHelper, CarritoHelper>();
+builder.Services.AddScoped<IItemCarritoHelper, ItemCarritoHelper>();
 
 var app = builder.Build();
 

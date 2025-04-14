@@ -56,5 +56,19 @@ namespace BackEnd.Controllers
         {
             _detalleService.Delete(id);
         }
+
+        // GET api/DetallePedido/Pedido/{idPedido}
+        [HttpGet("Pedido/{idPedido}")]
+        public ActionResult<IEnumerable<DetallePedidoDTO>> GetDetallesByPedidoId(int idPedido)
+        {
+            var detalles = _detalleService.GetDetallesByPedidoId(idPedido);
+
+            if (detalles == null || !detalles.Any())
+            {
+                return NotFound($"No se encontraron detalles para el pedido con ID {idPedido}.");
+            }
+
+            return Ok(detalles);
+        }
     }
 }
