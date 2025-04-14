@@ -9,7 +9,7 @@ namespace BackEnd.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class CategoriaController : ControllerBase
     {
         ICategoriaService _categoriaService;

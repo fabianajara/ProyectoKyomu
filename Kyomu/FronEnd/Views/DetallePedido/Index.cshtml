@@ -45,10 +45,7 @@
                         <div class="btn-group">
                             @Html.ActionLink("Detalles", "Details", new { id = item.IdDetallePedido }, new { @class = "btn btn-sm btn-outline-secondary" })
                             @Html.ActionLink("Editar", "Edit", new { id = item.IdDetallePedido }, new { @class = "btn btn-sm btn-outline-warning" })
-                            <form asp-action="Delete" method="post" class="d-inline">
-                                <input type="hidden" name="id" value="@item.IdDetallePedido" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
-                            </form>
+                            @Html.ActionLink("Eliminar", "Delete", new { id = item.IdDetallePedido }, new { @class = "btn btn-sm btn-outline-danger" })
                         </div>
                         <small class="text-muted">Estado: @(pedido?.Estado ?? "N/A")</small>
                     </div>

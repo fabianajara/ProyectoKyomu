@@ -10,7 +10,7 @@ namespace BackEnd.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class RolController : ControllerBase
     {
         IRolService _rolService;

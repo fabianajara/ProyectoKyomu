@@ -32,10 +32,7 @@
                         <div class="btn-group">
                             @Html.ActionLink("Detalles", "Details", new { id = item.IdMetodo }, new { @class = "btn btn-sm btn-outline-secondary" })
                             @Html.ActionLink("Editar", "Edit", new { id = item.IdMetodo }, new { @class = "btn btn-sm btn-outline-warning" })
-                            <form asp-action="Delete" method="post" class="d-inline">
-                                <input type="hidden" name="id" value="@item.IdMetodo" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
-                            </form>
+                            @Html.ActionLink("Eliminar", "Delete", new { id = item.IdMetodo }, new { @class = "btn btn-sm btn-outline-danger" })
                         </div>
                     </div>
                 </div>

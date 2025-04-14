@@ -11,7 +11,7 @@ namespace BackEnd.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ReseñaController : ControllerBase
     {
         IReseñaService _reseñaService;
