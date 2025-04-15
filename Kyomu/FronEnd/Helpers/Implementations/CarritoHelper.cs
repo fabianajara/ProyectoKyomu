@@ -51,7 +51,6 @@ namespace FronEnd.Helpers.Implementations
             return parsedUserId;
         }
 
-
         /// <summary>
         /// Retorna el carrito (pedido pendiente) del usuario, mapeando sus detalles a CarritoViewModel.
         /// </summary>
@@ -105,7 +104,6 @@ namespace FronEnd.Helpers.Implementations
 
             return carrito;
         }
-
 
         /// <summary>
         /// Agrega un platillo al carrito (pedido pendiente). Si ya existe en el detalle, se actualiza la cantidad.

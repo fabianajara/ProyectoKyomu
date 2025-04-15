@@ -257,7 +257,11 @@ namespace FronEnd.Controllers
 
                 if (usuario != null)
                 {
-                    
+                    HttpContext.Session.SetInt32("UserRoleId", usuario.IdRol ?? 0); // Guarda el ID del rol
+                    HttpContext.Session.SetInt32("UserId", usuario.IdUsuario);
+                    HttpContext.Session.SetString("UserName", usuario.Nombre);
+
+
                     var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
@@ -293,5 +297,14 @@ namespace FronEnd.Controllers
                 return View(model);
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            HttpContext.Session.Clear(); // Limpia todo
+            return RedirectToAction("Index", "Home");
+        }
+
     }
 }
