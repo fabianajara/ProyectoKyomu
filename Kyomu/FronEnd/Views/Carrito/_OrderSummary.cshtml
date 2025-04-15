@@ -1,0 +1,23 @@
+﻿@model FronEnd.Models.CarritoViewModel
+
+<div class="order-summary">
+    <h5 class="mb-3">Resumen de Productos</h5>
+
+    @foreach (var item in Model.Items)
+    {
+        <div class="d-flex justify-content-between mb-2">
+            <div>
+                <span class="fw-bold">@item.Nombre</span>
+                <span class="text-muted">x @item.Cantidad</span>
+            </div>
+            <span>@item.Subtotal.ToString("C")</span>
+        </div>
+    }
+
+    <hr />
+
+    <div class="d-flex justify-content-between fw-bold">
+        <span>Total:</span>
+        <span class="text-success">@Model.Total.ToString("C")</span>
+    </div>
+</div>

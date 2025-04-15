@@ -54,12 +54,16 @@ namespace DAL.Implementations
         {
             try
             {
-                _context.SaveChanges();
-                return true;
+                return _context.SaveChanges() > 0;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                // Loggear el error (necesitarías inyectar ILogger)
+                Console.WriteLine($"Error al guardar cambios: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                }
                 return false;
             }
         }

@@ -41,7 +41,7 @@ namespace BackEnd.Controllers
 
         // PUT api/<UsuarioController>/5
         [HttpPut("{id}")]
-        public ActionResult<UsuarioDTO> Put( [FromBody] UsuarioDTO usuario)
+        public ActionResult<UsuarioDTO> Put([FromBody] UsuarioDTO usuario)
         {
             _usuarioService.Update(usuario);
             return Ok(usuario);

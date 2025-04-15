@@ -1,0 +1,59 @@
+﻿@model FronEnd.Models.CarritoViewModel
+
+@{
+    ViewData["Title"] = "Finalizar Compra";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Confirmación de Pedido</h2>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Detalles del Pedido</h4>
+                </div>
+                <div class="card-body">
+                    <partial name="_OrderSummary" model="Model" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Información de Pago</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="ProcesarPedido" method="post">
+                        <div class="mb-3">
+                            <label asp-for="IdMetodoSeleccionado" class="form-label">Método de Pago</label>
+                            <select asp-for="IdMetodoSeleccionado"
+                                    asp-items="Model.MetodosPagoDisponibles"
+                                    class="form-select"
+                                    required>
+                                <option value="">Seleccione un método</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TipoEntregaSeleccionado" class="form-label">Tipo de Entrega</label>
+                            <select asp-for="TipoEntregaSeleccionado"
+                                    asp-items="Model.OpcionesEntrega"
+                                    class="form-select"
+                                    required>
+                                <option value="">Seleccione entrega</option>
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-credit-card"></i> Confirmar Pago
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+﻿@model FronEnd.Models.CarritoViewModel
+
+@{
+    ViewData["Title"] = "Carrito de Compras";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Tu Carrito de Compras</h2>
+
+    @if (Model.Items.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Producto</th>
+                        <th>Precio Unitario</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.Imagen))
+                                {
+                                    <img src="@Url.Content("~/images/" + item.Imagen)"
+                                         alt="@item.Nombre"
+                                         class="img-thumbnail"
+                                         style="max-width: 100px;" />
+                                }
+                            </td>
+                            <td>@item.Nombre</td>
+                            <td>@item.Precio.ToString("C")</td>
+                            <td>@item.Cantidad</td>
+                            <td>@item.Subtotal.ToString("C")</td>
+                            <td>
+                                <form asp-action="RemoveItem" method="post">
+                                    <input type="hidden" name="idPlatillo" value="@item.IdPlatillo" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <form asp-action="Clear" method="post">
+                    <button type="submit" class="btn btn-outline-danger">
+                        <i class="bi bi-cart-x"></i> Vaciar Carrito
+                    </button>
+                </form>
+            </div>
+            <div class="col-md-6 text-end">
+                <h4>Total: <span class="text-success">@Model.Total.ToString("C")</span></h4>
+                <a asp-action="Checkout" class="btn btn-primary btn-lg">
+                    <i class="bi bi-bag-check"></i> Finalizar Compra
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center">
+            <h4 class="alert-heading">¡Tu carrito está vacío!</h4>
+            <p>Explora nuestro menú y agrega deliciosos platillos.</p>
+            <a asp-controller="Platillo" asp-action="Index" class="btn btn-primary">
+                Ver Menú
+            </a>
+        </div>
+    }
+</div>

@@ -185,6 +185,15 @@
                                 <h4>@item.Nombre</h4>
                                 <p class="ingredients">@item.Descripcion</p>
                                 <p class="price">@item.Precio.ToString("C")</p>
+
+                                <!-- Botón de Ordenar -->
+                                <form asp-controller="Carrito" asp-action="AddItem" method="post">
+                                    <input type="hidden" name="idPlatillo" value="@item.IdPlatillo" />
+                                    <input type="hidden" name="cantidad" value="1" />
+                                    <button type="submit" class="btn btn-primary btn-ordenar">
+                                        <i class="bi bi-cart-plus"></i> Ordenar
+                                    </button>
+                                </form>
                             </div>
                         }
                     </div>
@@ -206,6 +215,15 @@
                                 <h4>@item.Nombre</h4>
                                 <p class="ingredients">@item.Descripcion</p>
                                 <p class="price">@item.Precio.ToString("C")</p>
+
+                                <!-- Botón de Ordenar -->
+                                <form asp-controller="Carrito" asp-action="AddItem" method="post">
+                                    <input type="hidden" name="idPlatillo" value="@item.IdPlatillo" />
+                                    <input type="hidden" name="cantidad" value="1" />
+                                    <button type="submit" class="btn btn-primary btn-ordenar">
+                                        <i class="bi bi-cart-plus"></i> Ordenar
+                                    </button>
+                                </form>
                             </div>
                         }
                     </div>
@@ -227,6 +245,15 @@
                                 <h4>@item.Nombre</h4>
                                 <p class="ingredients">@item.Descripcion</p>
                                 <p class="price">@item.Precio.ToString("C")</p>
+
+                                <!-- Botón de Ordenar -->
+                                <form asp-controller="Carrito" asp-action="AddItem" method="post">
+                                    <input type="hidden" name="idPlatillo" value="@item.IdPlatillo" />
+                                    <input type="hidden" name="cantidad" value="1" />
+                                    <button type="submit" class="btn btn-primary btn-ordenar">
+                                        <i class="bi bi-cart-plus"></i> Ordenar
+                                    </button>
+                                </form>
                             </div>
                         }
                     </div>
@@ -463,3 +490,20 @@
     </section><!-- Fin Sección de Contacto -->
 
 </main>
+<style>
+    .btn-ordenar {
+        background-color: #800000;
+        border-color: #600000;
+        transition: all 0.3s ease;
+    }
+
+        .btn-ordenar:hover {
+            background-color: #a00000;
+            border-color: #800000;
+            transform: scale(1.05);
+        }
+
+    .menu-item form {
+        margin-top: 15px;
+    }
+</style>

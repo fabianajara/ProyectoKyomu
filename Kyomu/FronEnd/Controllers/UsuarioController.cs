@@ -1,10 +1,13 @@
 ﻿using FronEnd.Helpers.Implementations;
 using FronEnd.Helpers.Interfaces;
 using FronEnd.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace FronEnd.Controllers
 {
@@ -240,7 +243,7 @@ namespace FronEnd.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(UsuarioViewModel model)
+        public async Task<IActionResult> Login(UsuarioViewModel model)
         {
             try
             {
@@ -254,8 +257,28 @@ namespace FronEnd.Controllers
 
                 if (usuario != null)
                 {
-                    // Guardamos al usuario en sesión
-                    HttpContext.Session.SetString("Usuario", JsonConvert.SerializeObject(usuario));
+                    
+                    var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
+                    new Claim(ClaimTypes.Name, usuario.Nombre)
+                };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    var authProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(20)
+                    };
+
+
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity),
+                        authProperties);
+
+
                     return RedirectToAction("Index", "Home");
                 }
                 else

@@ -5,19 +5,52 @@ using System.Text;
 using System.Text.Json;
 using System.Linq;
 using System.Collections.Generic;
+using System.Security.Claims;
+using System.Security;
 
 namespace FronEnd.Helpers.Implementations
 {
     public class CarritoHelper : ICarritoHelper
     {
         private readonly IServiceRepository _serviceRepository;
-        // Se usa un ID de usuario simulado; en producción se obtendría del contexto de autenticación.
-        private readonly int _userId = 1;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly int? _userId;
 
-        public CarritoHelper(IServiceRepository serviceRepository)
+        public CarritoHelper(IServiceRepository serviceRepository, IHttpContextAccessor httpContextAccessor)
         {
             _serviceRepository = serviceRepository;
+            _httpContextAccessor = httpContextAccessor;
+            _userId = GetAuthenticatedUserId();
         }
+
+        public bool IsUserAuthenticated()
+        {
+            return _userId.HasValue &&
+                   _httpContextAccessor.HttpContext?.User.Identity.IsAuthenticated == true;
+        }
+
+        private int? GetAuthenticatedUserId()
+        {
+            var httpContext = _httpContextAccessor?.HttpContext;
+            if (httpContext == null || !httpContext.User.Identity.IsAuthenticated)
+            {
+                return null;
+            }
+
+            var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || string.IsNullOrEmpty(userIdClaim.Value))
+            {
+                return null;
+            }
+
+            if (!int.TryParse(userIdClaim.Value, out int parsedUserId))
+            {
+                return null;
+            }
+
+            return parsedUserId;
+        }
+
 
         /// <summary>
         /// Retorna el carrito (pedido pendiente) del usuario, mapeando sus detalles a CarritoViewModel.
@@ -207,9 +240,10 @@ namespace FronEnd.Helpers.Implementations
         /// </summary>
         private int CrearPedidoPendiente()
         {
+
             var nuevoPedido = new PedidoViewModel
             {
-                IdUsuario = _userId,
+                IdUsuario = _userId.Value,
                 FechaPedido = System.DateTime.Now,
                 Total = 0,
                 Estado = "Pendiente"
