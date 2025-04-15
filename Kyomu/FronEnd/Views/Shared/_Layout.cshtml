@@ -130,7 +130,9 @@
                                     <form asp-area="" asp-controller="Usuario" asp-action="Logout" method="post">
                                         <button type="submit" class="dropdown-item">Cerrar Sesión</button>
                                     </form>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Carrito" asp-action="Index">Mi carrito</a>
                                 </li>
+
                             }
                             else
                             {
@@ -139,6 +141,9 @@
                                 </li>
                                 <li>
                                     <a class="dropdown-item" asp-area="" asp-controller="Usuario" asp-action="Create">Registrarse</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Carrito" asp-action="Index">Mi carrito</a>
                                 </li>
                             }
                         </ul>

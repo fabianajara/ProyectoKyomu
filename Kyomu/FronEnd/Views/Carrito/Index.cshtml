@@ -4,14 +4,14 @@
     ViewData["Title"] = "Carrito de Compras";
 }
 
-<div class="container mt-4">
-    <h2 class="mb-4">Tu Carrito de Compras</h2>
+<div class="container my-5">
+    <h2 class="mb-4 text-center fw-bold">🛒 Tu Carrito de Compras</h2>
 
     @if (Model.Items.Any())
     {
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="table-dark">
+        <div class="table-responsive rounded shadow-sm">
+            <table class="table align-middle table-striped">
+                <thead class="table-dark text-center">
                     <tr>
                         <th>Imagen</th>
                         <th>Producto</th>
@@ -24,25 +24,23 @@
                 <tbody>
                     @foreach (var item in Model.Items)
                     {
-                        <tr>
+                        <tr class="text-center">
                             <td>
                                 @if (!string.IsNullOrEmpty(item.Imagen))
                                 {
-                                    <img src="@Url.Content("~/images/" + item.Imagen)"
-                                         alt="@item.Nombre"
-                                         class="img-thumbnail"
-                                         style="max-width: 100px;" />
+                                    <img src="@Url.Content("~/images/" + item.Imagen)" alt="@item.Nombre"
+                                         class="img-fluid rounded" style="max-width: 80px;" />
                                 }
                             </td>
-                            <td>@item.Nombre</td>
+                            <td class="fw-semibold">@item.Nombre</td>
                             <td>@item.Precio.ToString("C")</td>
                             <td>@item.Cantidad</td>
                             <td>@item.Subtotal.ToString("C")</td>
                             <td>
-                                <form asp-action="RemoveItem" method="post">
+                                <form asp-action="RemoveItem" method="post" class="d-inline">
                                     <input type="hidden" name="idPlatillo" value="@item.IdPlatillo" />
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="bi bi-trash"></i> Eliminar
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash-fill"></i>
                                     </button>
                                 </form>
                             </td>
@@ -50,31 +48,44 @@
                     }
                 </tbody>
             </table>
+            <div class="col-md-6 d-flex justify-content-center justify-content-md-start align-items-center">
+                <!-- Formulario para Vaciar Carrito -->
+                <form asp-action="Clear" method="post" class="m-0">
+                    <button type="submit" class="btn btn-outline-danger px-2 py-1" style="font-size: 0.85rem;">
+                        <i class="bi bi-cart-x-fill me-1"></i> Vaciar Carrito
+                    </button>
+                </form>
+
+                <!-- Botón de Seguir Comprando -->
+                <a asp-controller="Home" asp-action="Index" class="btn btn-sm btn-outline-warning px-2 py-1" style="font-size: 0.85rem;">
+                    🍽️ Seguir comprando
+                </a>
+            </div>
+
+
         </div>
 
         <div class="row mt-4">
-            <div class="col-md-6">
-                <form asp-action="Clear" method="post">
-                    <button type="submit" class="btn btn-outline-danger">
-                        <i class="bi bi-cart-x"></i> Vaciar Carrito
-                    </button>
-                </form>
-            </div>
-            <div class="col-md-6 text-end">
-                <h4>Total: <span class="text-success">@Model.Total.ToString("C")</span></h4>
-                <a asp-action="Checkout" class="btn btn-primary btn-lg">
-                    <i class="bi bi-bag-check"></i> Finalizar Compra
-                </a>
+            <div class="col-12 d-flex justify-content-end align-items-center">
+                <div class="text-end">
+                    <div class="mb-1" style="font-size: 0.9rem;">
+                        Total: <span class="text-success fw-semibold">@Model.Total.ToString("C")</span>
+                    </div>
+                    <a asp-controller="Carrito" asp-action="Checkout" class="btn btn-success px-2 py-1">
+                        <i class="bi bi-bag-check-fill me-1"></i> Finalizar Compra
+                    </a>
+                </div>
             </div>
         </div>
+
     }
     else
     {
-        <div class="alert alert-warning text-center">
-            <h4 class="alert-heading">¡Tu carrito está vacío!</h4>
-            <p>Explora nuestro menú y agrega deliciosos platillos.</p>
-            <a asp-controller="Platillo" asp-action="Index" class="btn btn-primary">
-                Ver Menú
+        <div class="alert alert-warning text-center mt-5 p-5 shadow-sm rounded">
+            <h4 class="alert-heading mb-3">😢 ¡Tu carrito está vacío!</h4>
+            <p class="mb-4">Explora nuestro menú y agrega los platillos que más te gusten.</p>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg">
+                🍽️ Ver Menú
             </a>
         </div>
     }
